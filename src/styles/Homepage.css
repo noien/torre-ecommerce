@@ -1,0 +1,127 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Background */
+.homepage {
+  min-height: 100vh;
+  background-color: #1f2937; /* Tailwind's gray-800 */
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.menu-icon div {
+  width: 24px;
+  height: 2px;
+  background: white;
+  margin: 5px 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.cart {
+  width: 26px;
+  height: 26px;
+  border: 1px solid white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  border: 1px solid #9ca3af; /* Tailwind gray-400 */
+  width: 280px;
+  margin: 1.5rem 2rem;
+}
+
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  outline: none;
+}
+
+.search-bar button {
+  border: none;
+  border-left: 1px solid #9ca3af;
+  background: transparent;
+  color: #d1d5db; /* Tailwind gray-300 */
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+/* Main Layout */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem 2rem;
+}
+
+/* Left Text */
+.hero-text h1 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.hero-text p {
+  margin-top: 2rem;
+  font-style: italic;
+  color: #d1d5db;
+  max-width: 500px;
+}
+
+/* Right Image Placeholder */
+.hero-image {
+  flex: 1;
+  background: #4b5563; /* Tailwind gray-600 */
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-image {
+    width: 100%;
+    margin-top: 2rem;
+  }
+}
