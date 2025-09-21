@@ -1,0 +1,61 @@
+/* Only essential custom styles that complement Tailwind */
+
+/* Remove default checkbox styling to work better with Tailwind */
+input[type="checkbox"] {
+  accent-color: #6b7280;
+}
+
+/* Custom select dropdown arrow styling */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+/* Focus states for better accessibility */
+input:focus,
+select:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for interactive elements */
+button,
+a,
+input,
+select {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Product card and image styles for Shop page */
+.shop-product-image {
+  height: 7rem;
+  width: 7rem;
+  object-fit: contain;
+  border-radius: 1.25rem;
+  border: 2px solid #d1d5db;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.shop-product-card {
+  border-radius: 1.25rem;
+  border: 2px solid #374151;
+  background: #23272f;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+.shop-product-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
