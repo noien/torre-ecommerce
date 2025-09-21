@@ -10,15 +10,17 @@ body {
   background-color: #1f2937;
   color: white;
   overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Homepage Container - Fixed Height */
 .homepage {
-  height: 100vh;
+  min-height: 100vh;
   background-color: #1f2937;
   color: white;
   position: relative;
   overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Background Overlay */

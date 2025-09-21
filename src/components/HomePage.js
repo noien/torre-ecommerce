@@ -1,11 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Homepage.css";
 import modelImage from "../assets/model.png";
+
+const ShopCollectionButton = () => {
+  const navigate = useNavigate();
+  return (
+    <button className="btn-primary" onClick={() => navigate("/shop")}>
+      SHOP COLLECTION
+    </button>
+  );
+};
 
 const Homepage = () => {
   return (
     <div className="homepage">
-      
       {/* Header with Navigation */}
       <header className="header">
         <div className="header-left">
@@ -19,8 +28,7 @@ const Homepage = () => {
           {/* Navigation Links - Horizontal */}
           <nav className="navigation">
             <a href="/home" className="nav-link">Home</a>
-            <a href="/patches" className="nav-link">Patches</a>
-            <a href="/shop" className="nav-link">Shop</a>
+            
           </nav>
         </div>
         
@@ -32,38 +40,33 @@ const Homepage = () => {
 
       {/* Main Content Layout */}
       <div className="main-layout">
-        {/* Left Content Section */}
-        <div className="left-content">
-          {/* Brand Name */}
+        <section className="left-content">
           <div className="brand-section">
             <h1 className="brand-title">
-              INK &<br />THREADS
+              INK & THREADS
             </h1>
-          </div>
-          
-          {/* Additional Content Below Logo */}
-          <div className="logo-content">
-            <p className="tagline">Premium Embroidered Caps</p>
-            <div className="cta-buttons">
-              <button className="btn-primary">Shop Collection</button>
-              <button className="btn-secondary">Custom Design</button>
+            
+            <div className="tagline">Premium Embroidered Caps</div>
+            
+            <div className="cta-buttons flex flex-col gap-4 mt-6">
+              <ShopCollectionButton />
+              <button className="btn-secondary">CUSTOM DESIGN</button>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="right-content">
+        <section className="right-content">
           <div className="image-container">
-            <div className="bracket bracket-top-right"></div>
-            <div className="bracket bracket-bottom-left"></div>
-            
             <img
               src={modelImage}
-              alt="Models wearing embroidered caps"
+              alt="Model"
               className="hero-image"
             />
+            
+            <div className="bracket bracket-top-right"></div>
+            <div className="bracket bracket-bottom-left"></div>
           </div>
           
-          {/* Description Section - Inside Right Content */}
           <div className="description-section">
             <p className="description-text">
               "Discover premium embroidered caps designed for style, comfort, and durability. 
@@ -71,7 +74,7 @@ const Homepage = () => {
               with every stitch."
             </p>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

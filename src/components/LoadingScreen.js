@@ -9,10 +9,10 @@ const Spinner = ({ size = 48 }) => (
       borderTop: '4px solid #38bdf8',
       borderRadius: '50%',
       animation: 'spin 1s linear infinite',
-      margin: '0 auto',
     }}
   />
 );
+
 
 // Add keyframes for spinner animation
 const style = document.createElement('style');
@@ -37,17 +37,28 @@ const LoadingScreen = ({ onLoadingComplete, duration = 2000 }) => {
   }, [duration, onLoadingComplete]);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center min-h-screen bg-black transition-opacity duration-400"
-      style={{
-        opacity: fade ? 0 : 1,
-        pointerEvents: fade ? 'none' : 'auto',
-        transition: 'opacity 400ms',
-      }}
-    >
-      <Spinner size={56} />
-    </div>
-  );
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999,
+      opacity: fade ? 0 : 1,
+      pointerEvents: fade ? "none" : "auto",
+      transition: "opacity 400ms",
+    }}
+  >
+    <Spinner size={56} />
+  </div>
+);
+
+
+
 };
 
 export default LoadingScreen;
