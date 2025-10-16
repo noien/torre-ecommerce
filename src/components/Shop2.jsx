@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Shoppage.css";
-import { allProducts } from "../routes/Products";
+import { allPatchProducts } from "../routes/Products2";
 
-const Shop = () => {
+const Shop2 = () => {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
@@ -17,7 +17,7 @@ const Shop = () => {
   const [minRating, setMinRating] = useState(0); // 0 = All ratings
 
   const categories = useMemo(() => {
-    const set = new Set(allProducts.map((p) => p.category));
+    const set = new Set(allPatchProducts.map((p) => p.category));
     return ["All", ...Array.from(set)];
   }, []);
 
@@ -31,7 +31,7 @@ const Shop = () => {
   // use numeric rating from allProducts for filtering and sorting
   const filteredProducts = useMemo(() => {
     // filter first
-    let results = allProducts.filter((p) => {
+    let results = allPatchProducts.filter((p) => {
       const prodRating = Number(p.rating || 0);
       if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
@@ -47,7 +47,7 @@ const Shop = () => {
     }
 
     return results;
-  }, [allProducts, search, selectedCategory, minRating, priceSort]);
+  }, [allPatchProducts, search, selectedCategory, minRating, priceSort]);
 
   // render stars using numeric rating (fills only up to numeric rating)
   const renderStars = (rating) =>
@@ -107,7 +107,7 @@ const Shop = () => {
             <button onClick={() => navigate("/")} className="shop-nav-link">
               Home
             </button>
-            <button onClick={() => navigate("/patches")} className="shop-nav-link">
+            <button onClick={() => navigate("/patches")} className="shop-nav-link active">
               Patches
             </button>
             <button onClick={() => navigate("/shop")} className="shop-nav-link">
@@ -222,7 +222,7 @@ const Shop = () => {
         {/* Products */}
         <main className="products-scroll-area">
           <div className="products-container">
-            <h2 className="products-title">PRODUCTS</h2>
+            <h2 className="products-title">PATCHES</h2>
 
             <div className="products-grid">
               {visibleProducts.map((product) => (
@@ -252,4 +252,4 @@ const Shop = () => {
   );
 };
 
-export default Shop;
+export default Shop2;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Homepage from "../components/Homepage";
 import Shop from "../components/Shop";
+import Shop2 from "../components/Shop2";
 import LoadingScreen from "../components/LoadingScreen";
 
 const RouteWrapper = () => {
@@ -24,18 +25,16 @@ const RouteWrapper = () => {
   }, [location.pathname]);
 
   return (
-    <div className="relative">
-      {loading && (
-        <LoadingScreen onLoadingComplete={handleLoadingComplete} duration={2000} />
-      )}
-      <div className={loading ? "hidden" : ""}>
-        <Routes>
+    <>
+      {loading && <LoadingScreen duration={600} onLoadingComplete={() => {}} />}
+      <div style={{ display: loading ? 'none' : 'block' }}>
+        <Routes location={location}>
           <Route path="/" element={<Homepage />} />
           <Route path="/shop" element={<Shop />} />
-          <Route path="/patches" element={<div>Patches Page Coming Soon</div>} />
+          <Route path="/patches" element={<Shop2 />} />
         </Routes>
       </div>
-    </div>
+    </>
   );
 };
 
