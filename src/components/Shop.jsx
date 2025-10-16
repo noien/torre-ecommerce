@@ -1,36 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Shoppage.css";
+import {allProducts} from "../routes/Products";
 
 const Shop = () => {
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [displayCount, setDisplayCount] = useState(9);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
 
-  const allProducts = [
-    { id: 1, name: "Trucker", rating: 4, price: "₱ 899 - 1099", image: "/src/images/product1.jpg" },
-    { id: 2, name: "Fitted", rating: 3, price: "₱ 1149 - 1299", image: "/src/images/product2.jpg" },
-    { id: 3, name: "Baseball Cap", rating: 5, price: "₱ 1249 - 1499", image: "/src/images/product3.jpg" },
-    { id: 4, name: "Snapback", rating: 4, price: "₱ 999 - 1199", image: "/src/images/product4.jpg" },
-    { id: 5, name: "Dad Hat", rating: 5, price: "₱ 849 - 1049", image: "/src/images/product5.jpg" },
-    { id: 6, name: "Bucket Hat", rating: 4, price: "₱ 799 - 999", image: "/src/images/product6.jpg" },
-    { id: 7, name: "Beanie", rating: 3, price: "₱ 699 - 899", image: "/src/images/product7.jpg" },
-    { id: 8, name: "Visor", rating: 4, price: "₱ 749 - 949", image: "/src/images/product8.jpg" },
-    { id: 9, name: "5-Panel", rating: 5, price: "₱ 1099 - 1299", image: "/src/images/product9.jpg" },
-    { id: 10, name: "Snapback Pro", rating: 4, price: "₱ 1199 - 1399", image: "/src/images/product10.jpg" },
-    { id: 11, name: "Classic Cap", rating: 5, price: "₱ 949 - 1149", image: "/src/images/product11.jpg" },
-    { id: 12, name: "Sport Cap", rating: 3, price: "₱ 899 - 1099", image: "/src/images/product12.jpg" },
-  ];
+  const categories = useMemo(() => {
+    const set = new Set(allProducts.map((p) => p.category));
+    return ["All", ...Array.from(set)];
+  }, []);
 
-  const filteredProducts = allProducts.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProducts = useMemo(() => {
+    const min = priceMin === "" ? null : Number(priceMin);
+    const max = priceMax === "" ? null : Number(priceMax);
+
+    return allProducts.filter((p) => {
+      if (search && !p.name.toLowerCase().includes(search.toLowerCase()))
+        return false;
+      if (selectedCategory !== "All" && p.category !== selectedCategory)
+        return false;
+      if (min !== null && p.priceMax < min) return false;
+      if (max !== null && p.priceMin > max) return false;
+      return true;
+    });
+  }, [search, selectedCategory, priceMin, priceMax]);
+
   const visibleProducts = filteredProducts.slice(0, displayCount);
 
   const handleScroll = () => {
-    const mainContent = document.querySelector('.products-scroll-area');
+    const mainContent = document.querySelector(".products-scroll-area");
     if (!mainContent) return;
-    
-    if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 200) {
+    if (
+      mainContent.scrollHeight - mainContent.scrollTop <=
+      mainContent.clientHeight + 200
+    ) {
       if (displayCount < filteredProducts.length) {
         setDisplayCount((prev) => Math.min(prev + 3, filteredProducts.length));
       }
@@ -38,85 +49,183 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    const mainContent = document.querySelector('.products-scroll-area');
+    const mainContent = document.querySelector(".products-scroll-area");
     if (mainContent) {
       mainContent.addEventListener("scroll", handleScroll);
       return () => mainContent.removeEventListener("scroll", handleScroll);
     }
   }, [displayCount, filteredProducts.length]);
 
+  useEffect(() => {
+    setDisplayCount(9);
+    const mainContent = document.querySelector(".products-scroll-area");
+    if (mainContent) mainContent.scrollTop = 0;
+  }, [search, selectedCategory, priceMin, priceMax]);
+
+  const renderStars = (rating) =>
+    [...Array(5)].map((_, i) => (
+      <span
+        key={i}
+        className={`star ${i < rating ? "star-filled" : "star-empty"}`}
+      >
+        ★
+      </span>
+    ));
+
   return (
     <div className="shop-container">
-      {/* Navigation Bar */}
+      {/* Navbar */}
       <nav className="shop-navbar">
         <div className="shop-nav-content">
-          <div className="shop-nav-links">
-            <a href="/" className="shop-nav-link">Home</a>
-            <a href="/patches" className="shop-nav-link">Patches</a>
-            <a href="/caps" className="shop-nav-link">Caps</a>
+          <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+            <button onClick={() => navigate("/")} className="shop-nav-link">
+              Home
+            </button>
+            <button onClick={() => navigate("/patches")} className="shop-nav-link">
+              Patches
+            </button>
+            <button onClick={() => navigate("/shop")} className="shop-nav-link">
+              Caps
+            </button>
           </div>
-          <div className="shop-cart">🛒</div>
+          <div className="shop-cart" title="Cart">
+            🛒
+          </div>
         </div>
       </nav>
 
-      {/* Main Layout Container */}
+      {/* Layout */}
       <div className="shop-main-layout">
-        {/* Fixed Sidebar */}
-        <aside className="shop-sidebar">
+        {/* Sidebar */}
+        <aside className="shop-sidebar" aria-label="Filters sidebar">
           <div className="sidebar-content">
-            {/* Search Bar */}
             <div className="search-container">
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search products..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="search-input"
               />
             </div>
 
-            {/* Filters */}
             <div className="filters-container">
-              <h3 className="filters-title">FILTERS</h3>
-              
-              {/* Filter Sections */}
+              <h3 className="filters-title">Filters</h3>
+
               <div className="filter-sections">
+                {/* Category */}
                 <div className="filter-section">
-                  <div className="filter-header">
-                    <span>Availability</span>
+                  <div className="filter-header border-top">
+                    <span>Category</span>
                     <ChevronDown size={16} className="chevron-icon" />
                   </div>
                   <div className="filter-options">
-                    <label className="filter-option">
-                      <input type="checkbox" className="shop-checkbox" />
-                      <span>Availability</span>
-                    </label>
-                    <label className="filter-option">
-                      <input type="checkbox" className="shop-checkbox" />
-                      <span>Out Of Stock</span>
-                    </label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      style={{
+                        width: "100%",
+                        background: "transparent",
+                        color: "#d1d5db",
+                        border: "1px solid #4b5563",
+                        padding: "0.5rem",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
-                {['Category', 'Colors', 'Price Range', 'Collections', 'Ratings'].map((filter) => (
-                  <div key={filter} className="filter-section">
-                    <div className="filter-header border-top">
-                      <span>{filter}</span>
-                      <ChevronDown size={16} className="chevron-icon" />
+                {/* Price Range */}
+                <div className="filter-section">
+                  <div className="filter-header border-top">
+                    <span>Price Range</span>
+                    <ChevronDown size={16} className="chevron-icon" />
+                  </div>
+                  <div className="filter-options">
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        value={priceMin}
+                        onChange={(e) => setPriceMin(e.target.value)}
+                        style={{
+                          flex: 1,
+                          background: "transparent",
+                          color: "#d1d5db",
+                          border: "1px solid #4b5563",
+                          padding: "0.45rem",
+                          borderRadius: "4px",
+                        }}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        value={priceMax}
+                        onChange={(e) => setPriceMax(e.target.value)}
+                        style={{
+                          flex: 1,
+                          background: "transparent",
+                          color: "#d1d5db",
+                          border: "1px solid #4b5563",
+                          padding: "0.45rem",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.5rem",
+                        marginTop: "0.5rem",
+                      }}
+                    >
+                      <button
+                        onClick={() => {
+                          setPriceMin("");
+                          setPriceMax("");
+                        }}
+                        style={{
+                          flex: 1,
+                          background: "#374151",
+                          color: "#fff",
+                          padding: "0.45rem",
+                          borderRadius: "4px",
+                          border: "none",
+                        }}
+                      >
+                        Reset
+                      </button>
+                      <button
+                        style={{
+                          flex: 1,
+                          background: "#4b5563",
+                          color: "#fff",
+                          padding: "0.45rem",
+                          borderRadius: "4px",
+                          border: "none",
+                        }}
+                      >
+                        Apply
+                      </button>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
             </div>
 
-            {/* Brand */}
             <div className="brand-section">
               <h1 className="brand-name">INK & THREADS</h1>
             </div>
           </div>
         </aside>
 
-        {/* Products Area - Scrollable */}
+        {/* Products */}
         <main className="products-scroll-area">
           <div className="products-container">
             <h2 className="products-title">PRODUCTS</h2>
@@ -124,18 +233,7 @@ const Shop = () => {
             <div className="products-grid">
               {visibleProducts.map((product) => (
                 <div key={product.id} className="product-card">
-                  <div className="product-stars">
-                    {[...Array(5)].map((_, i) => (
-                      <span 
-                        key={i} 
-                        className={`star ${i < product.rating ? 'star-filled' : 'star-empty'}`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Product Image */}
+                  <div className="product-stars">{renderStars(product.rating)}</div>
                   <div className="product-image-wrapper">
                     <img
                       src={product.image}
@@ -143,13 +241,23 @@ const Shop = () => {
                       className="product-image"
                     />
                   </div>
-
                   <h3 className="product-name">{product.name}</h3>
-                  <button className="product-button">Add</button>
-                  <p className="product-price">{product.price}</p>
+                  <button
+                    className="product-button"
+                    onClick={() => alert(`${product.name} added (demo)`)}
+                  >
+                    Add
+                  </button>
+                  <p className="product-price">{product.priceLabel}</p>
                 </div>
               ))}
             </div>
+
+            {displayCount < filteredProducts.length && (
+              <div style={{ textAlign: "center", padding: "2rem 0" }}>
+                <p style={{ color: "#9ca3af" }}>Scroll for more products...</p>
+              </div>
+            )}
           </div>
         </main>
       </div>
