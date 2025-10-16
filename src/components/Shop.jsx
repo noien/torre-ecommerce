@@ -1,114 +1,158 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 import "../styles/Shoppage.css";
 
 const Shop = () => {
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
+  const [displayCount, setDisplayCount] = useState(9);
 
-  const products = [
-    // Your product data here
+  const allProducts = [
+    { id: 1, name: "Trucker", rating: 4, price: "₱ 899 - 1099", image: "/src/images/product1.jpg" },
+    { id: 2, name: "Fitted", rating: 3, price: "₱ 1149 - 1299", image: "/src/images/product2.jpg" },
+    { id: 3, name: "Baseball Cap", rating: 5, price: "₱ 1249 - 1499", image: "/src/images/product3.jpg" },
+    { id: 4, name: "Snapback", rating: 4, price: "₱ 999 - 1199", image: "/src/images/product4.jpg" },
+    { id: 5, name: "Dad Hat", rating: 5, price: "₱ 849 - 1049", image: "/src/images/product5.jpg" },
+    { id: 6, name: "Bucket Hat", rating: 4, price: "₱ 799 - 999", image: "/src/images/product6.jpg" },
+    { id: 7, name: "Beanie", rating: 3, price: "₱ 699 - 899", image: "/src/images/product7.jpg" },
+    { id: 8, name: "Visor", rating: 4, price: "₱ 749 - 949", image: "/src/images/product8.jpg" },
+    { id: 9, name: "5-Panel", rating: 5, price: "₱ 1099 - 1299", image: "/src/images/product9.jpg" },
+    { id: 10, name: "Snapback Pro", rating: 4, price: "₱ 1199 - 1399", image: "/src/images/product10.jpg" },
+    { id: 11, name: "Classic Cap", rating: 5, price: "₱ 949 - 1149", image: "/src/images/product11.jpg" },
+    { id: 12, name: "Sport Cap", rating: 3, price: "₱ 899 - 1099", image: "/src/images/product12.jpg" },
   ];
 
-  const renderStars = (rating) => {
-    return [...Array(5)].map((_, index) => (
-      <span key={index} className={`text-xl ${index < rating ? 'text-yellow-400' : 'text-gray-400'}`}>
-        ★
-      </span>
-    ));
+  const filteredProducts = allProducts.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const visibleProducts = filteredProducts.slice(0, displayCount);
+
+  const handleScroll = () => {
+    const mainContent = document.querySelector('.products-scroll-area');
+    if (!mainContent) return;
+    
+    if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 200) {
+      if (displayCount < filteredProducts.length) {
+        setDisplayCount((prev) => Math.min(prev + 3, filteredProducts.length));
+      }
+    }
   };
 
+  useEffect(() => {
+    const mainContent = document.querySelector('.products-scroll-area');
+    if (mainContent) {
+      mainContent.addEventListener("scroll", handleScroll);
+      return () => mainContent.removeEventListener("scroll", handleScroll);
+    }
+  }, [displayCount, filteredProducts.length]);
+
   return (
-    <div className="min-h-screen bg-[#1f2937]">
-      {/* Left Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-72 bg-[#1a1a1a] p-6 overflow-y-auto">
-        <nav className="mb-8">
-          <div className="hamburger-menu mb-6">
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
+    <div className="shop-container">
+      {/* Navigation Bar */}
+      <nav className="shop-navbar">
+        <div className="shop-nav-content">
+          <div className="shop-nav-links">
+            <a href="/" className="shop-nav-link">Home</a>
+            <a href="/patches" className="shop-nav-link">Patches</a>
+            <a href="/caps" className="shop-nav-link">Caps</a>
           </div>
-          <div className="space-y-4">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/patches" className="nav-link">Patches</a>
-            <a href="/shop" className="nav-link">Caps</a>
-          </div>
-        </nav>
-
-        {/* Search Bar */}
-        <div className="search-container mb-8">
-          <input
-            type="text"
-            placeholder="Search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent border border-gray-600 rounded px-4 py-2"
-          />
+          <div className="shop-cart">🛒</div>
         </div>
+      </nav>
 
-        {/* Filters */}
-        <div className="filters space-y-6">
-          <div className="filter-section">
-            <h3 className="text-white mb-2">Availability</h3>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" className="form-checkbox" />
-              <span>In Stock</span>
-            </label>
-          </div>
-          {/* Add more filter sections */}
-        </div>
-
-        {/* Brand Logo */}
-        <div className="mt-auto pt-8">
-          <h1 className="text-4xl font-light">INK & THREADS</h1>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="ml-72 p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-white">PRODUCTS</h2>
-          <div className="cart-icon">🛒</div>
-        </div>
-
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="flex justify-center mb-2">
-                {renderStars(product.rating)}
-              </div>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-lg mb-4"
+      {/* Main Layout Container */}
+      <div className="shop-main-layout">
+        {/* Fixed Sidebar */}
+        <aside className="shop-sidebar">
+          <div className="sidebar-content">
+            {/* Search Bar */}
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="search-input"
               />
-              <h3 className="text-lg font-semibold text-white mb-2">{product.name}</h3>
-              <button className="w-full py-2 border border-gray-400 rounded hover:bg-gray-700 transition">
-                Add
-              </button>
-              <p className="text-sm text-gray-400 mt-2">{product.price}</p>
             </div>
-          ))}
-        </div>
 
-        {/* More Button */}
-        <div className="text-center mt-12">
-          <button className="text-white text-lg hover:underline">More</button>
-        </div>
+            {/* Filters */}
+            <div className="filters-container">
+              <h3 className="filters-title">FILTERS</h3>
+              
+              {/* Filter Sections */}
+              <div className="filter-sections">
+                <div className="filter-section">
+                  <div className="filter-header">
+                    <span>Availability</span>
+                    <ChevronDown size={16} className="chevron-icon" />
+                  </div>
+                  <div className="filter-options">
+                    <label className="filter-option">
+                      <input type="checkbox" className="shop-checkbox" />
+                      <span>Availability</span>
+                    </label>
+                    <label className="filter-option">
+                      <input type="checkbox" className="shop-checkbox" />
+                      <span>Out Of Stock</span>
+                    </label>
+                  </div>
+                </div>
 
-        {/* Approach Section */}
-        <section className="mt-16 text-center max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            OUR APPROACH TO FASHION DESIGN
-          </h2>
-          <p className="text-gray-300">
-            At Ink & Threads, we combine creativity and craftsmanship to deliver timeless styles. 
-            Each piece is thoughtfully designed and carefully made to ensure lasting quality, 
-            comfort, and a refined finish.
-          </p>
-        </section>
-      </main>
+                {['Category', 'Colors', 'Price Range', 'Collections', 'Ratings'].map((filter) => (
+                  <div key={filter} className="filter-section">
+                    <div className="filter-header border-top">
+                      <span>{filter}</span>
+                      <ChevronDown size={16} className="chevron-icon" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Brand */}
+            <div className="brand-section">
+              <h1 className="brand-name">INK & THREADS</h1>
+            </div>
+          </div>
+        </aside>
+
+        {/* Products Area - Scrollable */}
+        <main className="products-scroll-area">
+          <div className="products-container">
+            <h2 className="products-title">PRODUCTS</h2>
+
+            <div className="products-grid">
+              {visibleProducts.map((product) => (
+                <div key={product.id} className="product-card">
+                  <div className="product-stars">
+                    {[...Array(5)].map((_, i) => (
+                      <span 
+                        key={i} 
+                        className={`star ${i < product.rating ? 'star-filled' : 'star-empty'}`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Product Image */}
+                  <div className="product-image-wrapper">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="product-image"
+                    />
+                  </div>
+
+                  <h3 className="product-name">{product.name}</h3>
+                  <button className="product-button">Add</button>
+                  <p className="product-price">{product.price}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
