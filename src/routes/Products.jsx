@@ -1,20 +1,20 @@
-import product1 from "../assets/bonet.png"
-import product2 from "../assets/closed.png"
-import product3 from "../assets/hat1.png"
-import product4 from "../assets/trucker.png"
-import product5 from "../assets/dadcap.png"
-import product6 from "../assets/bucket-hat.png"
-import product7 from "../assets/baseball-cap.png"
-import product8 from "../assets/visor-hat.png"
-import product9 from "../assets/cargo-hat.png"
-import product10 from "../assets/fitted-cap.png"
+import product1 from "../assets/cap/bonet.png"
+import product2 from "../assets/cap/closed.png"
+import product3 from "../assets/cap/hat1.png"
+import product4 from "../assets/cap/trucker.png"
+import product5 from "../assets/cap/dadcap.png"
+import product6 from "../assets/cap/bucket-hat.png"
+import product7 from "../assets/cap/baseball-cap.png"
+import product8 from "../assets/cap/visor-hat.png"
+import product9 from "../assets/cap/cargo-hat.png"
+import product10 from "../assets/cap/fitted-cap.png"
 
 export const allProducts = [
   {
     id: 1,
     name: "Trucker",
     category: "Trucker",
-    rating: 4,
+    rating: 1,
     priceMin: 899,
     priceMax: 1099,
     priceLabel: "₱ 899 - 1099",

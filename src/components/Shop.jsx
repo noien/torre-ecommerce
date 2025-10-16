@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Shoppage.css";
-import {allProducts} from "../routes/Products";
+import { allProducts } from "../routes/Products";
 
 const Shop = () => {
   const navigate = useNavigate();
@@ -10,38 +10,51 @@ const Shop = () => {
   const [search, setSearch] = useState("");
   const [displayCount, setDisplayCount] = useState(9);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceMin, setPriceMin] = useState("");
-  const [priceMax, setPriceMax] = useState("");
+  const [priceExpanded, setPriceExpanded] = useState(false);
+  // priceSort: null = no explicit sort, 'asc' = low->high, 'desc' = high->low
+  const [priceSort, setPriceSort] = useState(null);
+  const [minRating, setMinRating] = useState(0); // 0 = All ratings
 
   const categories = useMemo(() => {
     const set = new Set(allProducts.map((p) => p.category));
     return ["All", ...Array.from(set)];
   }, []);
 
-  const filteredProducts = useMemo(() => {
-    const min = priceMin === "" ? null : Number(priceMin);
-    const max = priceMax === "" ? null : Number(priceMax);
+  const togglePriceSort = () => {
+    // Toggle between 'desc' and 'asc' (user wanted arrow up = highest->lowest)
+    setPriceSort((prev) => (prev === "desc" ? "asc" : "desc"));
+    // ensure the price header is expanded visually
+    setPriceExpanded(true);
+  };
 
-    return allProducts.filter((p) => {
-      if (search && !p.name.toLowerCase().includes(search.toLowerCase()))
-        return false;
-      if (selectedCategory !== "All" && p.category !== selectedCategory)
-        return false;
-      if (min !== null && p.priceMax < min) return false;
-      if (max !== null && p.priceMin > max) return false;
+  // ensure ratings are numeric and comparison uses >=
+  const filteredProducts = useMemo(() => {
+    // make sure priceSort/minRating are applied after filtering
+    let results = allProducts.filter((p) => {
+      const prodRating = Number(p.rating); // coerce to number
+      if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
+      if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
+      if (minRating > 0 && prodRating < Number(minRating)) return false; // require rating >= minRating
       return true;
     });
-  }, [search, selectedCategory, priceMin, priceMax]);
 
+    // then sort by price if requested (use priceMin as base)
+    if (priceSort === "asc") {
+      results = results.slice().sort((a, b) => a.priceMin - b.priceMin);
+    } else if (priceSort === "desc") {
+      results = results.slice().sort((a, b) => b.priceMin - a.priceMin);
+    }
+
+    return results;
+  }, [allProducts, search, selectedCategory, minRating, priceSort]);
+
+  // rest unchanged: visibleProducts, scroll handlers, renderStars...
   const visibleProducts = filteredProducts.slice(0, displayCount);
 
   const handleScroll = () => {
     const mainContent = document.querySelector(".products-scroll-area");
     if (!mainContent) return;
-    if (
-      mainContent.scrollHeight - mainContent.scrollTop <=
-      mainContent.clientHeight + 200
-    ) {
+    if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 200) {
       if (displayCount < filteredProducts.length) {
         setDisplayCount((prev) => Math.min(prev + 3, filteredProducts.length));
       }
@@ -60,17 +73,24 @@ const Shop = () => {
     setDisplayCount(9);
     const mainContent = document.querySelector(".products-scroll-area");
     if (mainContent) mainContent.scrollTop = 0;
-  }, [search, selectedCategory, priceMin, priceMax]);
+  }, [search, selectedCategory, minRating, priceSort]);
 
+  // renderStars: ensure it fills only to the numeric rating
   const renderStars = (rating) =>
-    [...Array(5)].map((_, i) => (
-      <span
-        key={i}
-        className={`star ${i < rating ? "star-filled" : "star-empty"}`}
-      >
-        ★
-      </span>
-    ));
+    [...Array(5)].map((_, i) => {
+      const r = Number(rating);
+      return (
+        <span key={i} className={`star ${i < r ? "star-filled" : "star-empty"}`}>
+          ★
+        </span>
+      );
+    });
+
+  // toggle rating filter (ensure numeric)
+  const handleRatingFilter = (rating) => {
+    const num = Number(rating);
+    setMinRating((prev) => (prev === num ? 0 : num));
+  };
 
   return (
     <div className="shop-container">
@@ -78,6 +98,12 @@ const Shop = () => {
       <nav className="shop-navbar">
         <div className="shop-nav-content">
           <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+            <div className="hamburger-menu" aria-hidden="true">
+              <div className="hamburger-line" />
+              <div className="hamburger-line" />
+              <div className="hamburger-line" />
+            </div>
+
             <button onClick={() => navigate("/")} className="shop-nav-link">
               Home
             </button>
@@ -88,7 +114,8 @@ const Shop = () => {
               Caps
             </button>
           </div>
-          <div className="shop-cart" title="Cart">
+
+          <div className="shop-cart cart-icon" title="Cart">
             🛒
           </div>
         </div>
@@ -123,14 +150,7 @@ const Shop = () => {
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      style={{
-                        width: "100%",
-                        background: "transparent",
-                        color: "#d1d5db",
-                        border: "1px solid #4b5563",
-                        padding: "0.5rem",
-                        borderRadius: "4px",
-                      }}
+                      className="category-select"
                     >
                       {categories.map((cat) => (
                         <option key={cat} value={cat}>
@@ -141,79 +161,53 @@ const Shop = () => {
                   </div>
                 </div>
 
-                {/* Price Range */}
+                {/* Price Range header now toggles sort order */}
+                <div className="filter-section">
+                  <div
+                    className="filter-header border-top"
+                    onClick={togglePriceSort}
+                    role="button"
+                    aria-pressed={priceSort !== null}
+                  >
+                    <span>Price Range</span>
+                    <ChevronDown
+                      size={16}
+                      className="chevron-icon"
+                      style={{
+                        transform: priceSort === "desc" ? "rotate(180deg)" : "none",
+                        transition: "transform .18s",
+                      }}
+                    />
+                  </div>
+                  {priceExpanded && (
+                    <div className="filter-options" style={{ marginTop: "0.5rem", color: "#9ca3af" }}>
+                      Sorted: {priceSort === "desc" ? "High → Low" : priceSort === "asc" ? "Low → High" : "Default"}
+                    </div>
+                  )}
+                </div>
+
+                {/* Ratings */}
                 <div className="filter-section">
                   <div className="filter-header border-top">
-                    <span>Price Range</span>
+                    <span>Ratings</span>
                     <ChevronDown size={16} className="chevron-icon" />
                   </div>
-                  <div className="filter-options">
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <input
-                        type="number"
-                        placeholder="Min"
-                        value={priceMin}
-                        onChange={(e) => setPriceMin(e.target.value)}
-                        style={{
-                          flex: 1,
-                          background: "transparent",
-                          color: "#d1d5db",
-                          border: "1px solid #4b5563",
-                          padding: "0.45rem",
-                          borderRadius: "4px",
-                        }}
-                      />
-                      <input
-                        type="number"
-                        placeholder="Max"
-                        value={priceMax}
-                        onChange={(e) => setPriceMax(e.target.value)}
-                        style={{
-                          flex: 1,
-                          background: "transparent",
-                          color: "#d1d5db",
-                          border: "1px solid #4b5563",
-                          padding: "0.45rem",
-                          borderRadius: "4px",
-                        }}
-                      />
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "0.5rem",
-                        marginTop: "0.5rem",
-                      }}
-                    >
-                      <button
-                        onClick={() => {
-                          setPriceMin("");
-                          setPriceMax("");
-                        }}
-                        style={{
-                          flex: 1,
-                          background: "#374151",
-                          color: "#fff",
-                          padding: "0.45rem",
-                          borderRadius: "4px",
-                          border: "none",
-                        }}
-                      >
-                        Reset
+                  <div className="filter-options" style={{ marginTop: "0.5rem", gap: "0.25rem" }}>
+                    <button className={`filter-option ${minRating === 0 ? "active-filter" : ""}`} onClick={() => setMinRating(0)}>
+                      All Ratings
+                    </button>
+                    {[5, 4, 3, 2, 1].map((r) => (
+                      <button key={r} className={`filter-option ${minRating === r ? "active-filter" : ""}`} onClick={() => handleRatingFilter(r)}>
+                        <span style={{ display: "inline-flex", gap: 4, marginRight: 8 }}>
+                          {[...Array(5)].map((_, i) => (
+                            <span key={i} className={`star ${i < r ? "star-filled" : "star-empty"}`} style={{ fontSize: 14 }}>
+                              ★
+                            </span>
+                          ))}
+                        </span>
+                        <span className="rating-label">{r}+ Stars</span>
                       </button>
-                      <button
-                        style={{
-                          flex: 1,
-                          background: "#4b5563",
-                          color: "#fff",
-                          padding: "0.45rem",
-                          borderRadius: "4px",
-                          border: "none",
-                        }}
-                      >
-                        Apply
-                      </button>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -235,17 +229,10 @@ const Shop = () => {
                 <div key={product.id} className="product-card">
                   <div className="product-stars">{renderStars(product.rating)}</div>
                   <div className="product-image-wrapper">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="product-image"
-                    />
+                    <img src={product.image} alt={product.name} className="product-image" />
                   </div>
                   <h3 className="product-name">{product.name}</h3>
-                  <button
-                    className="product-button"
-                    onClick={() => alert(`${product.name} added (demo)`)}
-                  >
+                  <button className="product-button" onClick={() => alert(`${product.name} added (demo)`)}>
                     Add
                   </button>
                   <p className="product-price">{product.priceLabel}</p>
