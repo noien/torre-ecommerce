@@ -10,10 +10,6 @@ const RouteWrapper = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  const handleLoadingComplete = () => {
-    setLoading(false);
-  };
-
   useEffect(() => {
     // Set loading to true on route change
     setLoading(true);

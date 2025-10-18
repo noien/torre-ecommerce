@@ -143,7 +143,6 @@ const Cartpage = () => {
                         Proceed to Checkout
                     </button>
                     
-                    <p className="text-sm text-gray-400 mt-4 text-center">Shipping and taxes calculated at checkout.</p>
                 </div>
             </div>
         </div>
