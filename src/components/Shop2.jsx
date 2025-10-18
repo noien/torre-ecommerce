@@ -1,6 +1,7 @@
+// Shop2.js
 import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../styles/Shoppage.css";
 import { allPatchProducts } from "../routes/Products2";
 
@@ -11,10 +12,8 @@ const Shop2 = () => {
   const [displayCount, setDisplayCount] = useState(9);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceExpanded, setPriceExpanded] = useState(false);
-  // priceSort: null = no explicit sort, 'asc' = low->high, 'desc' = high->low
   const [priceSort, setPriceSort] = useState(null);
-  // state (ensure numeric minRating)
-  const [minRating, setMinRating] = useState(0); // 0 = All ratings
+  const [minRating, setMinRating] = useState(0);
 
   const categories = useMemo(() => {
     const set = new Set(allPatchProducts.map((p) => p.category));
@@ -22,24 +21,19 @@ const Shop2 = () => {
   }, []);
 
   const togglePriceSort = () => {
-    // Toggle between 'desc' and 'asc' (user wanted arrow up = highest->lowest)
     setPriceSort((prev) => (prev === "desc" ? "asc" : "desc"));
-    // ensure the price header is expanded visually
     setPriceExpanded(true);
   };
 
-  // use numeric rating from allProducts for filtering and sorting
   const filteredProducts = useMemo(() => {
-    // filter first
     let results = allPatchProducts.filter((p) => {
       const prodRating = Number(p.rating || 0);
       if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
-      if (minRating > 0 && prodRating < Number(minRating)) return false; // keep items with rating >= minRating
+      if (minRating > 0 && prodRating < Number(minRating)) return false;
       return true;
     });
 
-    // then sort by price if requested
     if (priceSort === "asc") {
       results = results.slice().sort((a, b) => a.priceMin - b.priceMin);
     } else if (priceSort === "desc") {
@@ -47,9 +41,8 @@ const Shop2 = () => {
     }
 
     return results;
-  }, [allPatchProducts, search, selectedCategory, minRating, priceSort]);
+  }, [search, selectedCategory, minRating, priceSort]);
 
-  // render stars using numeric rating (fills only up to numeric rating)
   const renderStars = (rating) =>
     [...Array(5)].map((_, i) => {
       const r = Number(rating || 0);
@@ -60,7 +53,6 @@ const Shop2 = () => {
       );
     });
 
-  // rating toggle - numeric toggle (click same rating to reset to All)
   const handleRatingFilter = (rating) => {
     const num = Number(rating);
     setMinRating((prev) => (prev === num ? 0 : num));
@@ -107,7 +99,7 @@ const Shop2 = () => {
             <button onClick={() => navigate("/")} className="shop-nav-link">
               Home
             </button>
-            <button onClick={() => navigate("/patches")} className="shop-nav-link active">
+            <button onClick={() => navigate("/patches")} className="shop-nav-link">
               Patches
             </button>
             <button onClick={() => navigate("/shop")} className="shop-nav-link">
@@ -115,9 +107,9 @@ const Shop2 = () => {
             </button>
           </div>
 
-          <div className="shop-cart cart-icon" title="Cart">
+          <Link to="/cart" className="shop-cart cart-icon" title="Cart">
             🛒
-          </div>
+          </Link>
         </div>
       </nav>
 
@@ -129,7 +121,7 @@ const Shop2 = () => {
             <div className="search-container">
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search patches..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="search-input"
@@ -161,7 +153,7 @@ const Shop2 = () => {
                   </div>
                 </div>
 
-                {/* Price Range header now toggles sort order */}
+                {/* Price Sort */}
                 <div className="filter-section">
                   <div
                     className="filter-header border-top"
@@ -232,10 +224,9 @@ const Shop2 = () => {
                     <img src={product.image} alt={product.name} className="product-image" />
                   </div>
                   <h3 className="product-name">{product.name}</h3>
-                  <button className="product-button" onClick={() => alert(`${product.name} added (demo)`)}>
-                    Add
-                  </button>
-                  <p className="product-price">{product.priceLabel}</p>
+                      <button className="product-button" onClick={() => 
+                        alert(`${product.name} added (demo)`)}>Add</button>
+                      <p className="product-price">{product.priceLabel}</p>
                 </div>
               ))}
             </div>

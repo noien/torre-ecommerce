@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // ADDED Link
 import "../styles/Homepage.css";
 import modelImage from "../assets/model.png";
 
@@ -30,9 +30,10 @@ const Homepage = () => {
           </nav>
         </div>
         
-        <div className="cart-icon">
+        {/* UPDATED: Cart icon is now a Link to the /cart route */}
+        <Link to="/cart" className="cart-icon">
           🛒
-        </div>
+        </Link>
       </header>
 
       <div className="main-layout">

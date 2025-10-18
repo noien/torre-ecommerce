@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // ADDED Link
 import "../styles/Shoppage.css";
 import { allProducts } from "../routes/Products";
 
@@ -115,9 +115,10 @@ const Shop = () => {
             </button>
           </div>
 
-          <div className="shop-cart cart-icon" title="Cart">
+          {/* UPDATED: Cart icon is now a Link to the /cart route */}
+          <Link to="/cart" className="shop-cart cart-icon" title="Cart">
             🛒
-          </div>
+          </Link>
         </div>
       </nav>
 

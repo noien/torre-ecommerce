@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import Homepage from "../components/Homepage";
 import Shop from "../components/Shop";
 import Shop2 from "../components/Shop2";
+import Cartpage from "../components/Cartpage"; // ADDED Import
 import LoadingScreen from "../components/LoadingScreen";
 
 const RouteWrapper = () => {
@@ -32,6 +33,7 @@ const RouteWrapper = () => {
           <Route path="/" element={<Homepage />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/patches" element={<Shop2 />} />
+          <Route path="/cart" element={<Cartpage />} /> {/* ADDED Route */}
         </Routes>
       </div>
     </>
@@ -41,7 +43,7 @@ const RouteWrapper = () => {
 const Webroutes = () => {
   return (
     <Router>
-      <RouteWrapper />
+        <RouteWrapper />
     </Router>
   );
 };
