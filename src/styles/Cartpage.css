@@ -3,7 +3,7 @@
 
 /* Main Cart Container */
 .cart-page-container {
-    padding-top: 6rem; 
+    padding-top: 6rem; /* Space for fixed navbar */
     padding-bottom: 4rem;
     min-height: 100vh;
     background-color: #1f2937; /* Consistent Background */
@@ -15,48 +15,72 @@
 .cart-title {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    margin-bottom: 2rem; 
+    text-align: left;
     color: #ffffff;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
 }
 
-/* Cart Item Card Styling (Reuses product card aesthetics) */
+/* Layout for Cart & Summary */
+.cart-main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 2/3 for items, 1/3 for summary */
+    gap: 2.5rem; 
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+@media (max-width: 1024px) {
+    .cart-main-content {
+        grid-template-columns: 1fr; /* Stack on smaller screens */
+    }
+}
+
+/* Cart Items List */
+.cart-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+}
+
+/* Cart Item Card Styling */
 .cart-item-card {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 1.5rem; 
     background-color: #1a232f; 
-    border: 2px solid rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
     border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+}
+.cart-item-card:hover {
+    border-color: #3b82f6; /* Subtle blue hover effect */
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
 }
 
 .cart-item-image {
-    width: 6rem;
-    height: 6rem;
+    width: 80px; 
+    height: 80px;
     object-fit: contain;
-    background: #d1d5db;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+    background-color: #36454F; 
+    border-radius: 4px;
 }
 
 .cart-item-name {
-    font-weight: 600;
     font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
     margin-bottom: 0.25rem;
 }
 
-.cart-item-details {
-    color: #d1d5db;
-    font-size: 0.9rem;
-}
-
 .cart-item-price {
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #3b82f6; /* Accent color */
-    font-size: 1.125rem;
+    color: #3b82f6; /* Blue accent for price */
 }
 
 /* Quantity Adjuster Styling */
@@ -67,60 +91,75 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
+    min-width: 100px;
+    justify-content: space-between;
 }
-
 .quantity-btn {
     background: transparent;
     border: none;
-    color: white;
-    font-size: 1.25rem;
+    color: #3b82f6; /* Blue quantity buttons */
+    font-size: 1.5rem;
     cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.quantity-btn:hover {
+    color: #2563eb;
 }
 
-/* Checkout Button (Reuses primary button style) */
+
+/* Order Summary Panel */
+.order-summary-panel {
+    background-color: #1a232f; 
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 2rem; 
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: fit-content;
+    position: sticky;
+    top: 6rem; /* Stick below the fixed navbar */
+}
+.summary-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: #ccc;
+}
+.summary-total {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Checkout Button (Accent color) */
 .btn-checkout {
     width: 100%;
     padding: 1rem;
-    background-color: #3b82f6; /* Accent color */
+    background-color: #3b82f6; /* Accent color - Blue */
     color: white;
     font-weight: 600;
     font-size: 1.125rem;
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-
 .btn-checkout:hover {
-    background-color: #2563eb;
-}
-
-/* Product Showcase Section (Cross-Sell) */
-.showcase-header {
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #3b82f6; /* Use accent color for this secondary title */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .cart-page-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    .cart-item-card {
-        flex-wrap: wrap;
-    }
-    .cart-item-image {
-        width: 4rem;
-        height: 4rem;
-    }
-    .cart-item-actions {
-        /* Pushes action buttons to a new line on small screens */
-        width: 100%;
-        justify-content: space-between;
-    }
+    background-color: #2563eb; /* Darker blue */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
 }
