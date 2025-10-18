@@ -1,152 +1,183 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; 
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/Cartpage.css";
+// try to import a local empty-cart image (add file at this path) or fallback to an external image
+import emptyCartImg from "../assets/cat-cart.png";
+import { X } from "lucide-react"; // Import a removal icon
+
+// Load products for the empty cart showcase
 import { allProducts } from '../routes/Products.jsx'; 
 import { allPatchProducts } from '../routes/Products2.jsx'; 
-import '../styles/Cartpage.css'; 
-
-// Helper function to mock a cart item component
-const CartItem = ({ item, updateQuantity, removeItem }) => (
-    <div className="cart-item-card">
-        <img 
-            src={item.image} 
-            alt={item.name} 
-            className="cart-item-image"
-        />
-        
-        {/* Item Details */}
-        <div className="flex-grow">
-            <h3 className="cart-item-name">{item.name}</h3>
-            {/* Added a remove button for a common design pattern */}
-            <button 
-                className="text-red-400 text-sm mt-1 hover:text-red-500 transition"
-                onClick={() => removeItem(item.id)}
-            >
-                Remove
-            </button>
-        </div>
-
-        {/* Quantity and Price section is aligned right */}
-        <div className="flex flex-col items-end justify-center gap-2 ml-auto">
-            <p className="cart-item-price">₱ {item.priceMin.toLocaleString()}</p>
-            
-            {/* Quantity Adjuster */}
-            <div className="quantity-adjuster">
-                <button className="quantity-btn" onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
-                <span className="text-white font-semibold">{item.quantity}</span>
-                <button className="quantity-btn" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
-            </div>
-            
-            <p className="text-sm text-gray-400 mt-1">Item Total: ₱ {(item.priceMin * item.quantity).toLocaleString()}</p>
-        </div>
-    </div>
-);
 
 const Cartpage = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    // Mock cart items data (using your existing product structures)
-    const [cartItems, setCartItems] = useState([
-        { ...allProducts.find(p => p.id === 1) || { id: 1, name: "Trucker Cap", priceMin: 899, image: "" }, quantity: 2 }, 
-        { ...allProducts.find(p => p.id === 2) || { id: 2, name: "Fitted Cap", priceMin: 1149, image: "" }, quantity: 1 }, 
-        { ...allPatchProducts.find(p => p.id === 1) || { id: 3, name: "Cartoon Cat Patch", priceMin: 299, image: "" }, quantity: 3 }, 
-    ]);
+  // load cart from localStorage (structure: [{ id, name, priceMin, priceMax, priceLabel, image, qty }])
+  const [cart, setCart] = useState(() => {
+    try {
+      const raw = localStorage.getItem("cart");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
 
-    // Mock cart functionality
-    const updateQuantity = (id, newQuantity) => {
-        if (newQuantity < 1) return;
-        setCartItems(cartItems.map(item =>
-            item.id === id ? { ...item, quantity: newQuantity } : item
-        ));
-    };
+  useEffect(() => {
+    // persist cart changes
+    try {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
 
-    const removeItem = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
-    };
+  // KEEP: This function is still needed for removing items via the new button.
+  const removeItem = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+  
+  // KEEP: The user explicitly requested to keep the emptyCart function
+  const clearCart = () => setCart([]);
+  // const emptyCart = clearCart; // Alias for clarity/legacy (optional)
 
-    // Calculate Subtotal and Total
-    const subtotal = cartItems.reduce((sum, item) => 
-        sum + (item.priceMin * item.quantity), 0
+  const updateQuantity = (id, delta) => {
+    setCart((prev) =>
+      prev
+        .map((item) => {
+          if (item.id !== id) return item;
+          const nextQty = Math.max(0, (item.qty || 1) + delta);
+          return { ...item, qty: nextQty };
+        })
+        .filter((i) => i.qty > 0) // remove items with qty 0
     );
-    const shipping = subtotal > 0 ? 250 : 0; 
-    const total = subtotal + shipping;
+  };
 
-    return (
-        <div className="cart-page-container">
-            {/* Header/Navbar structure mimicking Shop.jsx for consistency */}
-            <nav className="shop-navbar">
-                <div className="shop-nav-content">
-                    <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-                        <div className="hamburger-menu" aria-hidden="true" onClick={() => navigate("/")}>
-                            <div className="hamburger-line" />
-                            <div className="hamburger-line" />
-                            <div className="hamburger-line" />
-                        </div>
-                        <button onClick={() => navigate("/")} className="shop-nav-link">Home</button>
-                        <button onClick={() => navigate("/patches")} className="shop-nav-link">Patches</button>
-                        <button onClick={() => navigate("/shop")} className="shop-nav-link">Caps</button>
-                    </div>
+  const subtotal = cart.reduce(
+    (acc, item) => acc + Number(item.priceMin || 0) * (item.qty || 1),
+    0
+  );
 
-                    <Link to="/cart" className="shop-cart cart-icon" title="Cart">
-                        🛒
-                    </Link>
-                </div>
-            </nav>
+  // For the empty cart showcase section (using the provided logic)
+  const showcasePatches = allPatchProducts.slice(0, 4);
 
-            <h1 className="cart-title">Your Cart</h1>
-            
-            <div className="cart-main-content">
-                {/* Left Column: Cart Items List */}
-                <div className="cart-items-list">
-                    {cartItems.length > 0 ? (
-                        cartItems.map(item => (
-                            <CartItem 
-                                key={item.id} 
-                                item={item} 
-                                updateQuantity={updateQuantity} 
-                                removeItem={removeItem} 
-                            />
-                        ))
-                    ) : (
-                        <div className="text-center p-10 bg-[#1a232f] border-2 border-white/10 rounded-xl">
-                            <p className="text-xl text-gray-400">Your cart is empty. Start shopping now!</p>
-                            <button className="btn-checkout w-auto mt-6" onClick={() => navigate("/shop")}>Go to Shop</button>
-                        </div>
-                    )}
-                </div>
+  const ShowcaseItem = ({ product }) => (
+    <div className="product-card" onClick={() => navigate(`/patches/${product.id}`)}>
+      <div className="product-image-wrapper">
+        <img src={product.image} alt={product.name} className="product-image" />
+      </div>
+      <h3 className="product-name">{product.name}</h3>
+      <p className="product-price">{product.priceLabel}</p>
+    </div>
+  );
 
-                {/* Right Column: Order Summary (Discards Payment) */}
-                <div className="order-summary-panel">
-                    <h2 className="summary-title">Order Summary</h2>
-                    
-                    <div>
-                        <div className="summary-line">
-                            <span>Subtotal ({cartItems.length} items):</span>
-                            <span>₱ {subtotal.toLocaleString()}</span>
-                        </div>
-                        <div className="summary-line">
-                            <span>Shipping Estimate:</span>
-                            <span className={shipping > 0 ? "text-green-400" : ""}>
-                                {shipping > 0 ? `₱ ${shipping.toLocaleString()}` : "FREE"}
-                            </span>
-                        </div>
-                        <div className="summary-total summary-line">
-                            <span>Order Total:</span>
-                            <span>₱ {total.toLocaleString()}</span>
-                        </div>
-                    </div>
+  return (
+    <div className="cart-page-container">
+      <h1 className="cart-title">Your Cart</h1>
 
-                    {/* Button for next step: Proceed to Checkout */}
-                    <button 
-                        className="btn-checkout"
-                        disabled={cartItems.length === 0}
-                    >
-                        Proceed to Checkout
-                    </button>
-                    
-                </div>
-            </div>
+      {/* RENDER WHEN CART IS EMPTY */}
+      {cart.length === 0 && (
+        <div className="cart-empty">
+          <img
+            src={emptyCartImg}
+            alt="Empty Cart"
+            className="cart-empty-image"
+            onClick={() => navigate("/shop")} // Makes the image clickable to shop
+          />
+          <p className="cart-empty-text">
+            Your cart is currently empty. Start shopping now!
+          </p>
+          <div className="cart-empty-actions">
+            <button className="btn-primary" onClick={() => navigate("/shop")}>
+              Shop Caps
+            </button>
+            <button className="btn-secondary" onClick={() => navigate("/patches")}>
+              Shop Patches
+            </button>
+          </div>
+          
+          {/* Showcase Section when cart is empty - Keep this logic */}
+          <h2 className="showcase-header" style={{ marginTop: '2rem' }}>Complete Your Cap Look</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
+              {showcasePatches.map(product => (
+                  <ShowcaseItem key={product.id} product={product} />
+              ))}
+          </div>
         </div>
-    );
+      )}
+
+      {/* RENDER WHEN CART HAS ITEMS (AND SUMMARY) */}
+      {cart.length > 0 && (
+        <div className="cart-layout">
+          <div className="cart-items-list">
+            {cart.map((item) => (
+              <div key={item.id} className="cart-item-card">
+                
+                {/* MODIFIED: Image container now has the absolute-positioned remove button */}
+                <div className="cart-item-image-wrapper-with-remove">
+                    {/* The link to item details is on the image */}
+                    <Link to={`/shop/${item.id}`} className="cart-item-image-link"> 
+                        <img src={item.image} alt={item.name} className="cart-item-image" />
+                    </Link>
+                    {/* The remove button at the image container card of the item */}
+                    <button 
+                        className="cart-image-remove-btn" 
+                        onClick={() => removeItem(item.id)}
+                        aria-label={`Remove ${item.name} from cart`}
+                    >
+                        <X size={16} /> {/* Using the imported X icon */}
+                    </button>
+                </div>
+
+                <div className="cart-item-details-container">
+                  <Link to={`/shop/${item.id}`} className="cart-item-name-link">
+                    <h3 className="cart-item-name">{item.name}</h3>
+                  </Link>
+                  <p className="cart-item-details">Size: One Size</p>
+                  <p className="cart-item-price-small">{item.priceLabel}</p>
+                </div>
+
+                <div className="cart-item-actions">
+                  <div className="quantity-adjuster">
+                    <button onClick={() => updateQuantity(item.id, -1)} className="qty-btn" aria-label="Decrease quantity">
+                      -
+                    </button>
+                    <span className="qty-value">{item.qty || 1}</span>
+                    <button onClick={() => updateQuantity(item.id, +1)} className="qty-btn" aria-label="Increase quantity">
+                      +
+                    </button>
+                  </div>
+                  {/* Removed the original "Remove" button here */}
+                  <div className="cart-item-total">
+                    Item Total: ₱ {(Number(item.priceMin || 0) * (item.qty || 1)).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <aside className="order-summary">
+            <h2>Order Summary</h2>
+            <hr />
+            <div className="summary-row">
+              <span>Subtotal ({cart.length} items):</span>
+              <span>₱ {subtotal.toLocaleString()}</span>
+            </div>
+            <div className="summary-row">
+              <span>Shipping Estimate:</span>
+              <span className="text-green-400">FREE</span>
+            </div>
+            <hr />
+            <div className="summary-total">
+              <span>Order Total:</span>
+              <span>₱ {subtotal.toLocaleString()}</span>
+            </div>
+            <button className="btn-primary" onClick={() => alert("Proceed to checkout (demo)")}>
+              PROCEED TO CHECKOUT
+            </button>
+            {/* REMOVED: Clear Cart button as requested */}
+          </aside>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Cartpage;
