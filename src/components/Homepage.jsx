@@ -26,7 +26,7 @@ const Homepage = () => {
           <nav className="navigation">
             <a href="/" className="nav-link">Home</a>
             <a href="/patches" className="nav-link">Patches</a>
-            <a href="/shop" className="nav-link">Shop</a>
+            <a href="/shop" className="nav-link">Cap</a>
           </nav>
         </div>
         

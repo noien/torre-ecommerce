@@ -6,7 +6,7 @@
     padding-top: 6rem; /* Space for fixed navbar */
     padding-bottom: 4rem;
     min-height: 100vh;
-    background-color: #1f2937; /* Consistent Background */
+    background-color: #2a2a2a; /* Consistent Background */
     color: white;
     font-family: 'Beatrice Deck Trial', serif; /* Consistent Font */
 }
@@ -52,7 +52,7 @@
     align-items: center;
     gap: 1.5rem;
     padding: 1.5rem; 
-    background-color: #1a232f; 
+    background-color: #2a2a2a; 
     border: 1px solid rgba(255, 255, 255, 0.15); 
     border-radius: 0.75rem;
     transition: all 0.2s ease-in-out;
@@ -66,7 +66,7 @@
     width: 80px; 
     height: 80px;
     object-fit: contain;
-    background-color: #36454F; 
+    background-color: #2a2a2a; 
     border-radius: 4px;
 }
 
@@ -110,7 +110,7 @@
 
 /* Order Summary Panel */
 .order-summary-panel {
-    background-color: #1a232f; 
+    background-color: #2a2a2a; 
     border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 2rem; 
     border-radius: 0.75rem;
