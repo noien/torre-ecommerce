@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Cartpage.css";
-// try to import a local empty-cart image (add file at this path) or fallback to an external image
 import emptyCartImg from "../assets/cat-cart.png";
 import { X } from "lucide-react"; // Import a removal icon
 
@@ -92,14 +91,7 @@ const Cartpage = () => {
               Shop Patches
             </button>
           </div>
-          
-          {/* Showcase Section when cart is empty - Keep this logic */}
-          <h2 className="showcase-header" style={{ marginTop: '2rem' }}>Complete Your Cap Look</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
-              {showcasePatches.map(product => (
-                  <ShowcaseItem key={product.id} product={product} />
-              ))}
-          </div>
+
         </div>
       )}
 

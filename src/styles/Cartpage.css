@@ -54,7 +54,7 @@
 
 /* Cart Items List */
 .cart-items-list {
-  flex: 1; /* Takes up remaining space */
+  flex: 1;
 }
 
 /* Cart Item Card Styling */
@@ -75,15 +75,15 @@
     transform: translateY(-2px);
 }
 
-/* --- START: NEW STYLES FOR REMOVE BUTTON OVER IMAGE --- */
+/* Image wrapper + remove button */
 .cart-item-image-wrapper-with-remove {
-    position: relative; /* Crucial for absolute positioning of button */
-    flex: 0 0 120px; /* Fixed size for the image container */
+    position: relative;
+    flex: 0 0 120px;
     width: 120px;
     height: 120px;
     border-radius: 8px;
     overflow: hidden;
-    background: white; /* Match the product card image wrapper style */
+    background: white;
     padding: 10px;
 }
 
@@ -102,12 +102,12 @@
 
 .cart-image-remove-btn {
     position: absolute;
-    top: 5px; /* Position from top-right corner */
+    top: 5px;
     right: 5px;
-    background: rgba(255, 0, 0, 0.8); /* Red background for visibility */
+    background: rgba(255, 0, 0, 0.8);
     color: white;
     border: none;
-    border-radius: 50%; /* Make it circular */
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     display: flex;
@@ -123,12 +123,10 @@
     opacity: 1;
     background: red;
 }
-/* --- END: NEW STYLES --- */
-
 
 /* Item Details */
 .cart-item-details-container {
-  flex-grow: 1; /* Takes up space between image and actions */
+  flex-grow: 1;
 }
 
 .cart-item-name-link {
@@ -156,7 +154,7 @@
   font-size: 1.125rem;
 }
 
-/* Item Actions (Quantity) */
+/* Item Actions */
 .cart-item-actions {
     display: flex;
     flex-direction: column;
@@ -164,7 +162,7 @@
     gap: 1rem;
 }
 
-/* Quantity Adjuster Styling */
+/* Quantity Adjuster */
 .quantity-adjuster {
     display: flex;
     align-items: center;
@@ -198,8 +196,6 @@
   font-weight: 600;
 }
 
-
-/* Item total on the right */
 .cart-item-total { 
   color:#d1d5db; 
   font-weight:600; 
@@ -228,27 +224,37 @@
   margin-top: 10px;
 }
 
-/* Checkout Button (Reuses primary button style) */
-.btn-primary {
-  width: 100%;
-  padding: 1rem;
-  background-color: #3b82f6; /* Accent color */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex; /* keeps them aligned nicely */
+  align-items: center;  /* vertical centering of text */
+  justify-content: center; /* horizontal centering */
+  padding: 0.75rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: transparent;
   color: white;
+  font-family: 'Beatrice Deck Trial', serif;
   font-weight: 600;
-  font-size: 1.125rem;
-  border: none;
-  border-radius: 0.5rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 12px;
+  transition: all 0.3s ease;
+  height: 52px;
+  width: 200px; /* ✅ Forces equal button height */
+  box-sizing: border-box; /* ensures padding doesn’t affect height */
 }
 
-.btn-primary:hover {
-    background-color: #2563eb;
+.btn-primary:hover,
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #3b82f6;
+  transform: translateY(-2px);
 }
 
 
-/* Media Queries for Responsiveness */
+/* Media Queries */
 @media (max-width: 768px) {
   .cart-layout {
     flex-direction: column;
