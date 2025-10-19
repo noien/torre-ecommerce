@@ -73,11 +73,11 @@ const Cartpage = () => {
         </div>
       </nav>
 
-      {/* 🧺 Main Cart Section */}
+      {/* Main Cart Section */}
       <div style={{ paddingTop: "7rem" }}>
         <h1 className="cart-title">Your Cart</h1>
 
-        {/* 🕳️ Empty Cart State */}
+        {/* Empty Cart State */}
         {cart.length === 0 && (
           <div className="cart-empty">
             <img
@@ -100,7 +100,7 @@ const Cartpage = () => {
           </div>
         )}
 
-        {/* 🧾 Cart With Items */}
+        {/* Cart With Items */}
         {cart.length > 0 && (
           <div className="cart-layout">
             {/* Cart Items */}
@@ -119,7 +119,7 @@ const Cartpage = () => {
                       />
                     </div>
 
-                    {/* ✅ Changed remove button to MinusCircle icon */}
+                    {/* Changed remove button to MinusCircle icon */}
                     <button
                       className="cart-image-remove-btn"
                       onClick={() => removeItem(item.id, item.source)}
