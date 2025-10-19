@@ -38,7 +38,7 @@ const Homepage = () => {
         <p className="homepage-subtitle">Premium Embroidered</p>
 
        <div className="homepage-buttons">
-      <button className="btn" onClick={() => navigate("/cap")}>
+      <button className="btn" onClick={() => navigate("/caps")}>
         PREMIUM CAPS
       </button>
       <button className="btn" onClick={() => navigate("/patches")}>
