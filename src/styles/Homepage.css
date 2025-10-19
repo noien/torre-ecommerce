@@ -9,8 +9,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #1f2937;
   color: white;
-  /* allow vertical scroll */
-  overflow-x: hidden;
+ 
 }
 
 /* Homepage Container - Fixed Height */
@@ -140,20 +139,21 @@ body {
   flex: 0 0 30%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   max-width: 30%;
+  padding-top: 1rem;
 }
 
 /* Brand Section - Bigger Logo */
 .brand-section {
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 6rem;
 }
 
 .brand-title {
   color: white;
   font-family: 'Beatrice Deck Trial', serif;
-  font-size: 6rem;
+  font-size: 4rem;
   font-weight: 800;
   line-height: 0.85;
   letter-spacing: -0.02em;
@@ -371,7 +371,7 @@ button:focus {
 
   .cta-buttons {
     flex-direction: row;
-    gap: 0.75rem;
+    gap: 1.5rem;
   }
 
   .btn-primary, .btn-secondary {
@@ -437,7 +437,7 @@ button:focus {
 
   .cta-buttons {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
   .btn-primary, .btn-secondary {
