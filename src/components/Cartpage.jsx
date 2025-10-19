@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Cartpage.css";
 import emptyCartImg from "../assets/cat-cart.png";
-import { MinusCircle } from "lucide-react"; // ✅ replaced X with MinusCircle
-import { allProducts } from "../routes/Products";
-import { allPatchProducts } from "../routes/Products2";
+import { MinusCircle } from "lucide-react"; // 
+
 
 const Cartpage = () => {
   const navigate = useNavigate();

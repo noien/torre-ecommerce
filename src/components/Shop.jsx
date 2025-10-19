@@ -9,27 +9,20 @@ const Shop = () => {
 
   const [search, setSearch] = useState("");
   const [displayCount, setDisplayCount] = useState(9);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceExpanded, setPriceExpanded] = useState(false);
   const [priceSort, setPriceSort] = useState(null);
   const [minRating, setMinRating] = useState(0);
-
-  const categories = useMemo(() => {
-    const set = new Set(allProducts.map((p) => p.category));
-    return ["All", ...Array.from(set)];
-  }, []);
+  const [ratingOpen, setRatingOpen] = useState(false); 
 
   const togglePriceSort = () => {
     setPriceSort((prev) => (prev === "desc" ? "asc" : "desc"));
     setPriceExpanded(true);
   };
 
-  // ✅ Fixed: Exact Rating Filter
   const filteredProducts = useMemo(() => {
     let results = allProducts.filter((p) => {
       const prodRating = Number(p.rating || 0);
       if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-      if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
       if (minRating > 0 && prodRating !== Number(minRating)) return false;
       return true;
     });
@@ -38,7 +31,7 @@ const Shop = () => {
     if (priceSort === "desc") results = results.sort((a, b) => b.priceMin - a.priceMin);
 
     return results;
-  }, [allProducts, search, selectedCategory, minRating, priceSort]);
+  }, [allProducts, search, minRating, priceSort]);
 
   const addToCart = (product) => {
     try {
@@ -60,9 +53,7 @@ const Shop = () => {
     [...Array(5)].map((_, i) => (
       <span
         key={i}
-        className={`text-sm ${
-          i < rating ? "text-yellow-400" : "text-gray-600"
-        }`}
+        className={`text-sm ${i < rating ? "text-yellow-400" : "text-gray-600"}`}
       >
         ★
       </span>
@@ -89,7 +80,7 @@ const Shop = () => {
     setDisplayCount(9);
     const mainContent = document.querySelector(".products-scroll-area");
     if (mainContent) mainContent.scrollTop = 0;
-  }, [search, selectedCategory, minRating, priceSort]);
+  }, [search, minRating, priceSort]);
 
   const visibleProducts = filteredProducts.slice(0, displayCount);
 
@@ -132,59 +123,54 @@ const Shop = () => {
               <h3 className="filters-title">Filters</h3>
 
               <div className="filter-sections">
-                {/* Category Filter */}
-                <div className="filter-section">
-                  <div className="filter-header border-top">
-                    <span>Category</span>
-                    <ChevronDown size={16} className="chevron-icon" />
-                  </div>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="category-select"
+                {/* ⭐ Rating Dropdown Filter */}
+                <div className="filter-section relative">
+                  <div
+                    className="filter-header border-top flex justify-between items-center cursor-pointer"
+                    onClick={() => setRatingOpen(!ratingOpen)}
                   >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Rating Filter */}
-                <div className="filter-section">
-                  <div className="filter-header border-top">
                     <span>Rating</span>
-                    <ChevronDown size={16} className="chevron-icon" />
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform ${ratingOpen ? "rotate-180" : ""}`}
+                    />
                   </div>
-                  <div className="mt-2 flex flex-col gap-2">
-                    {[0, 1, 2, 3, 4, 5].map((num) => (
-                      <button
-                        key={num}
-                        onClick={() => setMinRating(num)}
-                        className={`flex items-center justify-between px-3 py-2 rounded-md text-sm border transition ${
-                          minRating === num
-                            ? "bg-blue-600 border-blue-500 text-white"
-                            : "bg-transparent border-gray-700 text-gray-300 hover:border-blue-400"
-                        }`}
-                      >
-                        {num === 0 ? "All Ratings" : (
-                          <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <span
-                                key={i}
-                                className={`text-sm ${
-                                  i < num ? "text-yellow-400" : "text-gray-700"
-                                }`}
-                              >
-                                ★
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </button>
-                    ))}
-                  </div>
+
+                  {ratingOpen && (
+                    <div className="absolute z-10 mt-2 w-full bg-gray-800 border border-gray-700 rounded-md shadow-lg">
+                      <ul className="divide-y divide-gray-700">
+                        {[0, 1, 2, 3, 4, 5].map((num) => (
+                          <li
+                            key={num}
+                            className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-700 ${
+                              minRating === num ? "bg-blue-600 text-white" : "text-gray-300"
+                            }`}
+                            onClick={() => {
+                              setMinRating(num);
+                              setRatingOpen(false);
+                            }}
+                          >
+                            {num === 0 ? (
+                              "All Ratings"
+                            ) : (
+                              <div className="flex gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <span
+                                    key={i}
+                                    className={`text-sm ${
+                                      i < num ? "text-yellow-400" : "text-gray-600"
+                                    }`}
+                                  >
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 {/* Price Sort */}

@@ -11,12 +11,14 @@ import product9 from "../assets/patches/Name.jpg";
 import product10 from "../assets/patches/Cars.png";
 import product11 from "../assets/patches/Quotes.png";
 import product12 from "../assets/patches/Mountain.png";
+import product13 from "../assets/patches/flowers.png";
+import product14 from "../assets/patches/space.jpg";
+import product15 from "../assets/patches/gothic.png";
 
 export const allPatchProducts = [
   {
     id: 1,
     name: "Cartoon Cat Patch",
-    category: "Cartoon",
     rating: 5,
     priceMin: 299,
     priceMax: 499,
@@ -26,17 +28,15 @@ export const allPatchProducts = [
   {
     id: 2,
     name: "Dragon Patch",
-    category: "Fantasy",
     rating: 4,
-    priceMin: 349,
-    priceMax: 549,
-    priceLabel: "₱ 349 - 549",
+    priceMin: 249,
+    priceMax: 349,
+    priceLabel: "₱ 249 - 349",
     image: product2,
   },
   {
     id: 3,
     name: "Flag Patch",
-    category: "Flag",
     rating: 3,
     priceMin: 199,
     priceMax: 299,
@@ -46,8 +46,7 @@ export const allPatchProducts = [
   {
     id: 4,
     name: "Letter Patch",
-    category: "Text",
-    rating: 4,
+    rating: 5,
     priceMin: 249,
     priceMax: 399,
     priceLabel: "₱ 249 - 399",
@@ -56,7 +55,6 @@ export const allPatchProducts = [
   {
     id: 5,
     name: "Military Patch",
-    category: "Military",
     rating: 5,
     priceMin: 399,
     priceMax: 599,
@@ -66,8 +64,7 @@ export const allPatchProducts = [
   {
     id: 6,
     name: "Number Patch",
-    category: "Numeric",
-    rating: 4,
+    rating: 5,
     priceMin: 299,
     priceMax: 499,
     priceLabel: "₱ 299 - 499",
@@ -76,7 +73,6 @@ export const allPatchProducts = [
   {
     id: 7,
     name: "NBA Logo Patch",
-    category: "Sports",
     rating: 5,
     priceMin: 399,
     priceMax: 599,
@@ -86,28 +82,25 @@ export const allPatchProducts = [
   {
     id: 8,
     name: "Music Patch",
-    category: "Music",
     rating: 4,
     priceMin: 249,
-    priceMax: 449,
-    priceLabel: "₱ 249 - 449",
+    priceMax: 349,
+    priceLabel: "₱ 249 - 349",
     image: product8,
   },
   {
     id: 9,
     name: "Name Patch",
-    category: "Custom",
     rating: 5,
-    priceMin: 399,
-    priceMax: 599,
-    priceLabel: "₱ 399 - 599",
+    priceMin: 199,
+    priceMax: 299,
+    priceLabel: "₱ 199 - 299",
     image: product9,
   },
   {
     id: 10,
     name: "Car Patch",
-    category: "Automotive",
-    rating: 4,
+    rating: 5,
     priceMin: 349,
     priceMax: 549,
     priceLabel: "₱ 349 - 549",
@@ -116,7 +109,6 @@ export const allPatchProducts = [
   {
     id: 11,
     name: "Quote Patch",
-    category: "Text",
     rating: 3,
     priceMin: 199,
     priceMax: 299,
@@ -126,11 +118,37 @@ export const allPatchProducts = [
   {
     id: 12,
     name: "Mountain Patch",
-    category: "Nature",
-    rating: 5,
-    priceMin: 299,
-    priceMax: 499,
-    priceLabel: "₱ 299 - 499",
+    rating: 2,
+    priceMin: 149,
+    priceMax: 249,
+    priceLabel: "₱ 149 - 249",
     image: product12,
   },
+  {
+    id: 13,
+    name: "Flower Patch",
+    rating: 2,
+    priceMin: 199,
+    priceMax: 299,
+    priceLabel: "₱ 199 - 299",
+    image: product13,
+  },
+  {
+    id: 14,   
+    name: "Space Patch",
+    rating: 4,
+    priceMin: 149,
+    priceMax: 299,
+    priceLabel: "₱ 149 - 299",
+    image: product14,
+  },
+  {
+    id: 15,
+    name: "Gothic Patch",
+    rating: 1,
+    priceMin: 199,
+    priceMax: 299,
+    priceLabel: "₱ 199 - 299",
+    image: product15,
+  }
 ];

@@ -1,4 +1,3 @@
-// Shop2.jsx — Final Integrated Version
 import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
@@ -10,15 +9,10 @@ const Shop2 = () => {
 
   const [search, setSearch] = useState("");
   const [displayCount, setDisplayCount] = useState(9);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceExpanded, setPriceExpanded] = useState(false);
   const [priceSort, setPriceSort] = useState(null);
   const [minRating, setMinRating] = useState(0);
-
-  const categories = useMemo(() => {
-    const set = new Set(allPatchProducts.map((p) => p.category));
-    return ["All", ...Array.from(set)];
-  }, []);
+  const [ratingOpen, setRatingOpen] = useState(false); 
 
   const togglePriceSort = () => {
     setPriceSort((prev) => (prev === "desc" ? "asc" : "desc"));
@@ -29,7 +23,6 @@ const Shop2 = () => {
     let results = allPatchProducts.filter((p) => {
       const prodRating = Number(p.rating || 0);
       if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-      if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
       if (minRating > 0 && prodRating !== Number(minRating)) return false;
       return true;
     });
@@ -38,17 +31,17 @@ const Shop2 = () => {
     if (priceSort === "desc") results = results.slice().sort((a, b) => b.priceMin - a.priceMin);
 
     return results;
-  }, [search, selectedCategory, minRating, priceSort]);
+  }, [search, minRating, priceSort]);
 
   const renderStars = (rating) =>
     [...Array(5)].map((_, i) => (
-      <span key={i} className={`star ${i < rating ? "star-filled" : "star-empty"}`}>★</span>
+      <span
+        key={i}
+        className={`text-sm ${i < rating ? "text-yellow-400" : "text-gray-600"}`}
+      >
+        ★
+      </span>
     ));
-
-  const handleRatingFilter = (rating) => {
-    const num = Number(rating);
-    setMinRating((prev) => (prev === num ? 0 : num));
-  };
 
   const visibleProducts = filteredProducts.slice(0, displayCount);
 
@@ -73,13 +66,12 @@ const Shop2 = () => {
     setDisplayCount(9);
     const mainContent = document.querySelector(".products-scroll-area");
     if (mainContent) mainContent.scrollTop = 0;
-  }, [search, selectedCategory, minRating, priceSort]);
+  }, [search, minRating, priceSort]);
 
-  // ✅ Add to Cart (Shared with Cartpage)
   const addToCart = (product) => {
     try {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const existing = cart.find(i => i.id === product.id && i.source === "patches");
+      const existing = cart.find((i) => i.id === product.id && i.source === "patches");
       if (existing) {
         existing.qty = (existing.qty || 1) + 1;
       } else {
@@ -126,6 +118,7 @@ const Shop2 = () => {
         {/* Sidebar */}
         <aside className="shop-sidebar" aria-label="Filters sidebar">
           <div className="sidebar-content">
+            {/* 🔍 Search */}
             <div className="search-container">
               <input
                 type="text"
@@ -136,126 +129,127 @@ const Shop2 = () => {
               />
             </div>
 
+            {/* ⚙ Filters */}
             <div className="filters-container">
               <h3 className="filters-title">Filters</h3>
 
               <div className="filter-sections">
-                {/* Category */}
-                <div className="filter-section">
-                  <div className="filter-header border-top">
-                    <span>Category</span>
-                    <ChevronDown size={16} className="chevron-icon" />
-                  </div>
-                  <div className="filter-options">
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="category-select"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Price Sort */}
+                {/* 💰 Price Sort */}
                 <div className="filter-section">
                   <div
-                    className="filter-header border-top"
+                    className="filter-header border-top flex justify-between items-center cursor-pointer"
                     onClick={togglePriceSort}
-                    role="button"
-                    aria-pressed={priceSort !== null}
                   >
                     <span>Price Range</span>
                     <ChevronDown
                       size={16}
-                      className="chevron-icon"
-                      style={{
-                        transform: priceSort === "desc" ? "rotate(180deg)" : "none",
-                        transition: "transform .18s",
-                      }}
+                      className={`transition-transform ${
+                        priceSort === "desc" ? "rotate-180" : ""
+                      }`}
                     />
                   </div>
                   {priceExpanded && (
-                    <div className="filter-options" style={{ marginTop: "0.5rem", color: "#9ca3af" }}>
-                      Sorted: {priceSort === "desc" ? "High → Low" : priceSort === "asc" ? "Low → High" : "Default"}
+                    <div className="filter-options text-gray-400 mt-1">
+                      Sorted:{" "}
+                      {priceSort === "desc"
+                        ? "High → Low"
+                        : priceSort === "asc"
+                        ? "Low → High"
+                        : "Default"}
                     </div>
                   )}
                 </div>
 
-                {/* Ratings */}
-                <div className="filter-section">
-                  <div className="filter-header border-top">
-                    <span>Ratings</span>
-                    <ChevronDown size={16} className="chevron-icon" />
+                {/*Ratings Dropdown (Tailwind) */}
+                <div className="filter-section relative">
+                  <div
+                    className="filter-header border-top flex justify-between items-center cursor-pointer"
+                    onClick={() => setRatingOpen(!ratingOpen)}
+                  >
+                    <span>Rating</span>
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform ${ratingOpen ? "rotate-180" : ""}`}
+                    />
                   </div>
-                  <div className="filter-options" style={{ marginTop: "0.5rem", gap: "0.25rem" }}>
-                    <button
-                      className={`filter-option ${minRating === 0 ? "active-filter" : ""}`}
-                      onClick={() => setMinRating(0)}
-                    >
-                      All Ratings
-                    </button>
-                    {[5, 4, 3, 2, 1].map((r) => (
-                      <button
-                        key={r}
-                        className={`filter-option ${minRating === r ? "active-filter" : ""}`}
-                        onClick={() => handleRatingFilter(r)}
-                      >
-                        <span style={{ display: "inline-flex", gap: 4, marginRight: 8 }}>
-                          {[...Array(5)].map((_, i) => (
-                            <span
-                              key={i}
-                              className={`star ${i < r ? "star-filled" : "star-empty"}`}
-                              style={{ fontSize: 14 }}
-                            >
-                              ★
-                            </span>
-                          ))}
-                        </span>
-                        <span className="rating-label">{r}+ Stars</span>
-                      </button>
-                    ))}
-                  </div>
+
+                  {ratingOpen && (
+                    <div className="absolute z-10 mt-2 w-full bg-gray-800 border border-gray-700 rounded-md shadow-lg">
+                      <ul className="divide-y divide-gray-700">
+                        {[0, 1, 2, 3, 4, 5].map((num) => (
+                          <li
+                            key={num}
+                            className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-700 ${
+                              minRating === num ? "bg-blue-600 text-white" : "text-gray-300"
+                            }`}
+                            onClick={() => {
+                              setMinRating(num);
+                              setRatingOpen(false);
+                            }}
+                          >
+                            {num === 0 ? (
+                              "All Ratings"
+                            ) : (
+                              <div className="flex gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <span
+                                    key={i}
+                                    className={`text-sm ${
+                                      i < num ? "text-yellow-400" : "text-gray-600"
+                                    }`}
+                                  >
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="brand-section">
+            {/* Brand */}
+            <div className="brand-section mt-auto pt-6">
               <h1 className="brand-name">INK & THREADS</h1>
             </div>
           </div>
         </aside>
 
-        {/* Products */}
+        {/* Product Grid */}
         <main className="products-scroll-area">
           <div className="products-container">
             <h2 className="products-title">PATCHES</h2>
 
             <div className="products-grid">
               {visibleProducts.map((product) => (
-                <div key={product.id} className="product-card">
-                  <div className="product-stars">{renderStars(product.rating)}</div>
+                <div
+                  key={product.id}
+                  className="product-card transition-transform hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="flex justify-center mb-2">{renderStars(product.rating)}</div>
                   <div className="product-image-wrapper">
                     <img src={product.image} alt={product.name} className="product-image" />
                   </div>
                   <h3 className="product-name">{product.name}</h3>
-                  <button className="product-button" onClick={() => addToCart(product)}>
+                  <p className="product-price">{product.priceLabel}</p>
+                  <button
+                    className="product-button mt-3"
+                    onClick={() => addToCart(product)}
+                  >
                     Add to Cart
                   </button>
-                  <p className="product-price">{product.priceLabel}</p>
                 </div>
               ))}
+              {visibleProducts.length === 0 && (
+                <p className="text-center text-gray-400 col-span-full">
+                  No products match your filters.
+                </p>
+              )}
             </div>
-
-            {displayCount < filteredProducts.length && (
-              <div style={{ textAlign: "center", padding: "2rem 0" }}>
-                <p style={{ color: "#9ca3af" }}>Scroll for more products...</p>
-              </div>
-            )}
           </div>
         </main>
       </div>

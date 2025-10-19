@@ -8,12 +8,16 @@ import product7 from "../assets/cap/baseball-cap.png"
 import product8 from "../assets/cap/visor-hat.png"
 import product9 from "../assets/cap/cargo-hat.png"
 import product10 from "../assets/cap/fitted-cap.png"
+import product11 from "../assets/cap/5panel.png"
+import product12 from "../assets/cap/fedora.jpg"
+import product13 from "../assets/cap/flat.jpg"
+import product14 from "../assets/cap/cargocap.png"
+import product15 from "../assets/cap/sunhat.jpg";
 
 export const allProducts = [
   {
     id: 1,
-    name: "Trucker",
-    category: "Trucker",
+    name: "Beanie",
     rating: 3,
     priceMin: 899,
     priceMax: 1099,
@@ -23,8 +27,7 @@ export const allProducts = [
   {
     id: 2,
     name: "Fitted",
-    category: "Fitted",
-    rating: 2,
+    rating: 5,
     priceMin: 1149,
     priceMax: 1299,
     priceLabel: "₱ 1149 - 1299",
@@ -32,9 +35,8 @@ export const allProducts = [
   },
   {
     id: 3,
-    name: "Baseball Cap",
-    category: "Baseball",
-    rating: 2,
+    name: "Fisherman Hat",
+    rating: 3,
     priceMin: 1249,
     priceMax: 1499,
     priceLabel: "₱ 1249 - 1499",
@@ -43,8 +45,7 @@ export const allProducts = [
   {
     id: 4,
     name: "Snapback",
-    category: "Snapback",
-    rating: 3,
+    rating: 5,
     priceMin: 999,
     priceMax: 1199,
     priceLabel: "₱ 999 - 1199",
@@ -52,9 +53,8 @@ export const allProducts = [
   },
   {
     id: 5,
-    name: "Dad Hat",
-    category: "Dad Hat",
-    rating: 5,
+    name: "Dad Cap",
+    rating: 4,
     priceMin: 849,
     priceMax: 1049,
     priceLabel: "₱ 849 - 1049",
@@ -63,8 +63,7 @@ export const allProducts = [
   {
     id: 6,
     name: "Bucket Hat",
-    category: "Bucket",
-    rating: 4,
+    rating: 3,
     priceMin: 799,
     priceMax: 999,
     priceLabel: "₱ 799 - 999",
@@ -72,9 +71,8 @@ export const allProducts = [
   },
   {
     id: 7,
-    name: "Beanie",
-    category: "Beanie",
-    rating: 3,
+    name: "Baseball Cap",
+    rating: 5,
     priceMin: 699,
     priceMax: 899,
     priceLabel: "₱ 699 - 899",
@@ -83,8 +81,7 @@ export const allProducts = [
   {
     id: 8,
     name: "Visor",
-    category: "Visor",
-    rating: 2,
+    rating: 1,
     priceMin: 749,
     priceMax: 949,
     priceLabel: "₱ 749 - 949",
@@ -92,9 +89,8 @@ export const allProducts = [
   },
   {
     id: 9,
-    name: "5-Panel",
-    category: "5-Panel",
-    rating: 1,
+    name: "Cargo Hat",
+    rating: 3,
     priceMin: 1099,
     priceMax: 1299,
     priceLabel: "₱ 1099 - 1299",
@@ -103,12 +99,56 @@ export const allProducts = [
   {
     id: 10,
     name: "Snapback Pro",
-    category: "Snapback",
-    rating: 1,
+    rating: 5,
     priceMin: 1199,
     priceMax: 1399,
     priceLabel: "₱ 1199 - 1399",
     image: product10,
+  },
+  {
+    id: 11,
+    name: "Fedora",
+    rating: 2,
+    priceMin: 1599,
+    priceMax: 1799,
+    priceLabel: "₱ 1599 - 1799",
+    image: product11,
+  },
+  {
+    id: 12,
+    name: "5-Panel",
+    rating: 2,
+    priceMin: 1099,
+    priceMax: 1299,
+    priceLabel: "₱ 1099 - 1299",
+    image: product12,
+  },
+  {
+    id: 13,
+    name: "Flat Cap",
+    rating: 3,
+    priceMin: 899,
+    priceMax: 1099,
+    priceLabel: "₱ 899 - 1099",
+    image: product13,
+  },
+  {
+    id: 14,
+    name: "Cargo Cap",
+    rating: 4,
+    priceMin: 1099,
+    priceMax: 1299,
+    priceLabel: "₱ 1099 - 1299",
+    image: product14,
+  },
+  {
+    id: 15,
+    name: "Sun Hat",
+    rating: 3,
+    priceMin: 1299,
+    priceMax: 1499,
+    priceLabel: "₱ 1299 - 1499",
+    image: product15,
   },
 ];
 

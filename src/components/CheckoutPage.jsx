@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Phone, User, CreditCard } from "lucide-react";
+import { MapPin, Phone, User, CreditCard, CheckCircle } from "lucide-react";
 
 const CheckoutPage = () => {
   const [cart, setCart] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,31 +25,43 @@ const CheckoutPage = () => {
     e.preventDefault();
     localStorage.removeItem("cart");
     localStorage.setItem("showSplashAfterCheckout", "true");
-    navigate("/");
+
+    // Show success message
+    setShowSuccess(true);
+
+    // Delay navigation for animation
+    setTimeout(() => {
+      navigate("/");
+    }, 1800);
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-['Beatrice Deck Trial']">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full bg-gray-800/70 backdrop-blur-md shadow-md py-4 px-6 flex justify-between items-center z-50">
-        <h1
-          onClick={() => navigate("/")}
-          className="text-2xl font-bold tracking-widest text-violet-400 cursor-pointer"
+    
+    <div
+      className="min-h-screen text-white font-sans relative overflow-hidden"
+      style={{
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        backgroundColor: "#2a2a2a",
+        opacity: 0.9,
+      }}
+    >
+      {/* Back Button */}
+        <button
+          onClick={() => navigate("/cart")}
+          className="absolute top-6 left-6 flex items-center gap-2 text-gray-300 hover:text-violet-400 transition"
         >
-          Order Checkout
-        </h1>
-        <div className="space-x-6">
-          <button onClick={() => navigate("/caps")} className="hover:text-violet-400 transition">
-            Caps
-          </button>
-          <button onClick={() => navigate("/patches")} className="hover:text-violet-400 transition">
-            Patches
-          </button>
-          <button onClick={() => navigate("/cart")} className="hover:text-violet-400 transition">
-            Cart
-          </button>
-        </div>
-      </nav>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="font-medium">Back to Cart</span>
+        </button>
+
 
       {/* Checkout Content */}
       <div className="pt-28 pb-16 px-6 md:px-12 lg:px-24">
@@ -70,6 +83,12 @@ const CheckoutPage = () => {
             <form
               onSubmit={handlePlaceOrder}
               className="bg-gray-800/70 p-8 rounded-2xl shadow-lg space-y-6"
+              style={{
+                backgroundColor: "#2a2a2a",
+                border: "2px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "0.75rem",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)"
+              }}
             >
               <h2 className="text-2xl font-semibold mb-2">Billing Details</h2>
 
@@ -130,15 +149,22 @@ const CheckoutPage = () => {
               </div>
 
               <button
-                type="submit"
-                className="w-full mt-4 bg-violet-600 hover:bg-violet-700 py-3 rounded-lg font-semibold transition"
-              >
-                Place Order
-              </button>
+                  type="submit"
+                  className="w-full mt-4 font-semibold py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white transition border-none cursor-pointer"
+                >
+                  Place Order
+                </button>
             </form>
 
             {/* RIGHT — ORDER SUMMARY */}
-            <div className="bg-gray-800/70 p-8 rounded-2xl shadow-lg">
+            <div className="bg-gray-800/70 p-8 rounded-2xl shadow-lg"
+              style={{
+                backgroundColor: "#2a2a2a",
+                border: "2px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "0.75rem",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",       
+              }}
+            >
               <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
 
               <div className="divide-y divide-gray-700 mb-4 max-h-72 overflow-y-auto pr-1">
@@ -183,6 +209,19 @@ const CheckoutPage = () => {
           </div>
         )}
       </div>
+
+      {/* SUCCESS PROMPT MODAL */}
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-gray-800 p-10 rounded-2xl shadow-2xl text-center transform transition-all scale-100 animate-scaleUp">
+            <CheckCircle className="mx-auto mb-4 text-green-400" size={60} />
+            <h2 className="text-2xl font-bold mb-2">Order Successful!</h2>
+            <p className="text-gray-300 mb-4">
+              Thank you for your purchase. Redirecting to homepage...
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
