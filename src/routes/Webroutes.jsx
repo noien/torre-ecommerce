@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import Homepage from "../components/Homepage";
 import Shop from "../components/Shop";
 import Shop2 from "../components/Shop2";
-import Cartpage from "../components/Cartpage"; 
+import Cartpage from "../components/Cartpage";
 import CheckoutPage from "../components/CheckoutPage";
 
 const RouteLoadingSpinner = ({ loading }) => {
