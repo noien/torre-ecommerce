@@ -100,7 +100,7 @@ const CheckoutPage = () => {
                 <input
                   type="text"
                   required
-                  placeholder="Juan Dela Cruz"
+                  placeholder="Lastname, Firstname Middlename"
                   className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 />
               </div>
@@ -114,7 +114,7 @@ const CheckoutPage = () => {
                   type="tel"
                   required
                   pattern="09[0-9]{9}"
-                  placeholder="09123456789"
+                  placeholder="09XXXXXXXXX"
                   className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 />
               </div>
@@ -127,7 +127,7 @@ const CheckoutPage = () => {
                 <input
                   type="text"
                   required
-                  placeholder="123 Mabini St, San Pablo, Laguna"
+                  placeholder="123 Street, Barangay, City"
                   className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 />
               </div>
