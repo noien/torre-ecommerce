@@ -21,14 +21,7 @@ const Homepage = () => {
   return (
     <div className="homepage">
       <header className="header">
-        <div className="header-left">
-          <div className="hamburger-menu">
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-          </div>
-
-          
+        <div className="header-left">        
         </div>
 
         {/* UPDATED: Cart icon is now a Link to the /cart route */}
