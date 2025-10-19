@@ -30,7 +30,7 @@ const Shop2 = () => {
       const prodRating = Number(p.rating || 0);
       if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
-      if (minRating > 0 && prodRating < Number(minRating)) return false;
+      if (minRating > 0 && prodRating !== Number(minRating)) return false;
       return true;
     });
 
