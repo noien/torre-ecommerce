@@ -1,4 +1,4 @@
-// Shop2.js
+// Shop2.jsx — Final Integrated Version
 import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
@@ -34,24 +34,16 @@ const Shop2 = () => {
       return true;
     });
 
-    if (priceSort === "asc") {
-      results = results.slice().sort((a, b) => a.priceMin - b.priceMin);
-    } else if (priceSort === "desc") {
-      results = results.slice().sort((a, b) => b.priceMin - a.priceMin);
-    }
+    if (priceSort === "asc") results = results.slice().sort((a, b) => a.priceMin - b.priceMin);
+    if (priceSort === "desc") results = results.slice().sort((a, b) => b.priceMin - a.priceMin);
 
     return results;
   }, [search, selectedCategory, minRating, priceSort]);
 
   const renderStars = (rating) =>
-    [...Array(5)].map((_, i) => {
-      const r = Number(rating || 0);
-      return (
-        <span key={i} className={`star ${i < r ? "star-filled" : "star-empty"}`}>
-          ★
-        </span>
-      );
-    });
+    [...Array(5)].map((_, i) => (
+      <span key={i} className={`star ${i < rating ? "star-filled" : "star-empty"}`}>★</span>
+    ));
 
   const handleRatingFilter = (rating) => {
     const num = Number(rating);
@@ -64,9 +56,8 @@ const Shop2 = () => {
     const mainContent = document.querySelector(".products-scroll-area");
     if (!mainContent) return;
     if (mainContent.scrollHeight - mainContent.scrollTop <= mainContent.clientHeight + 200) {
-      if (displayCount < filteredProducts.length) {
+      if (displayCount < filteredProducts.length)
         setDisplayCount((prev) => Math.min(prev + 3, filteredProducts.length));
-      }
     }
   };
 
@@ -83,6 +74,23 @@ const Shop2 = () => {
     const mainContent = document.querySelector(".products-scroll-area");
     if (mainContent) mainContent.scrollTop = 0;
   }, [search, selectedCategory, minRating, priceSort]);
+
+  // ✅ Add to Cart (Shared with Cartpage)
+  const addToCart = (product) => {
+    try {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(i => i.id === product.id && i.source === "patches");
+      if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
+        cart.push({ ...product, qty: 1, source: "patches" });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${product.name} added to cart!`);
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+    }
+  };
 
   return (
     <div className="shop-container">
@@ -185,14 +193,25 @@ const Shop2 = () => {
                     <ChevronDown size={16} className="chevron-icon" />
                   </div>
                   <div className="filter-options" style={{ marginTop: "0.5rem", gap: "0.25rem" }}>
-                    <button className={`filter-option ${minRating === 0 ? "active-filter" : ""}`} onClick={() => setMinRating(0)}>
+                    <button
+                      className={`filter-option ${minRating === 0 ? "active-filter" : ""}`}
+                      onClick={() => setMinRating(0)}
+                    >
                       All Ratings
                     </button>
                     {[5, 4, 3, 2, 1].map((r) => (
-                      <button key={r} className={`filter-option ${minRating === r ? "active-filter" : ""}`} onClick={() => handleRatingFilter(r)}>
+                      <button
+                        key={r}
+                        className={`filter-option ${minRating === r ? "active-filter" : ""}`}
+                        onClick={() => handleRatingFilter(r)}
+                      >
                         <span style={{ display: "inline-flex", gap: 4, marginRight: 8 }}>
                           {[...Array(5)].map((_, i) => (
-                            <span key={i} className={`star ${i < r ? "star-filled" : "star-empty"}`} style={{ fontSize: 14 }}>
+                            <span
+                              key={i}
+                              className={`star ${i < r ? "star-filled" : "star-empty"}`}
+                              style={{ fontSize: 14 }}
+                            >
                               ★
                             </span>
                           ))}
@@ -224,9 +243,10 @@ const Shop2 = () => {
                     <img src={product.image} alt={product.name} className="product-image" />
                   </div>
                   <h3 className="product-name">{product.name}</h3>
-                      <button className="product-button" onClick={() => 
-                        alert(`${product.name} added (demo)`)}>Add</button>
-                      <p className="product-price">{product.priceLabel}</p>
+                  <button className="product-button" onClick={() => addToCart(product)}>
+                    Add to Cart
+                  </button>
+                  <p className="product-price">{product.priceLabel}</p>
                 </div>
               ))}
             </div>

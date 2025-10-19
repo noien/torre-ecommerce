@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Cartpage.css";
-import emptyCartImg from "../assets/cat-cart.png"; // adjusted import
+import emptyCartImg from "../assets/cat-cart.png";
 import { X } from "lucide-react";
-
 import { allProducts } from "../routes/Products.jsx";
 import { allPatchProducts } from "../routes/Products2.jsx";
 
@@ -46,7 +45,6 @@ const Cartpage = () => {
     0
   );
 
-  // fallback sample patches for empty cart
   const showcasePatches = allPatchProducts.slice(0, 4);
 
   const ShowcaseItem = ({ product }) => (
@@ -65,106 +63,144 @@ const Cartpage = () => {
 
   return (
     <div className="cart-page-container">
-      <h1 className="cart-title">Your Cart</h1>
+      {/* 🔝 Navigation Bar */}
+      <nav className="shop-navbar">
+        <div className="shop-nav-content">
+          <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+            <div className="hamburger-menu" aria-hidden="true">
+              <div className="hamburger-line" />
+              <div className="hamburger-line" />
+              <div className="hamburger-line" />
+            </div>
 
-      {/* --- EMPTY CART --- */}
-      {cart.length === 0 && (
-        <div className="cart-empty">
-          <img
-            src={emptyCartImg}
-            alt="Empty Cart"
-            className="cart-empty-image"
-            onClick={() => navigate("/caps")}
-          />
-          <p className="cart-empty-text">
-            Your cart is currently empty. Start shopping now!
-          </p>
-          <div className="cart-empty-actions">
-            <button className="btn-primary" onClick={() => navigate("/caps")}>
-              Shop Caps
+            <button onClick={() => navigate("/")} className="shop-nav-link">
+              Home
             </button>
-            <button className="btn-secondary" onClick={() => navigate("/patches")}>
-              Shop Patches
+            <button onClick={() => navigate("/caps")} className="shop-nav-link">
+              Caps
+            </button>
+            <button onClick={() => navigate("/patches")} className="shop-nav-link">
+              Patches
             </button>
           </div>
+
+          <Link to="/cart" className="shop-cart cart-icon" title="Cart">
+            🛒
+          </Link>
         </div>
-      )}
+      </nav>
 
-      {/* --- CART WITH ITEMS --- */}
-      {cart.length > 0 && (
-        <div className="cart-layout">
-          <div className="cart-items-list">
-            {cart.map((item, index) => (
-              <div key={`${item.source}-${item.id}-${index}`} className="cart-item-card">
-                <div className="cart-item-image-wrapper-with-remove">
-                  <div className="cart-item-image-link">
-                    <img src={item.image} alt={item.name} className="cart-item-image" />
-                  </div>
-                  <button
-                    className="cart-image-remove-btn"
-                    onClick={() => removeItem(item.id, item.source)}
-                    aria-label={`Remove ${item.name}`}
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
+      <div style={{ paddingTop: "7rem" }}>
+        <h1 className="cart-title">Your Cart</h1>
 
-                <div className="cart-item-details-container">
-                  <h3 className="cart-item-name">{item.name}</h3>
-                  <p className="cart-item-details">Category: {item.category}</p>
-                  <p className="cart-item-price-small">{item.priceLabel}</p>
-                </div>
+        {/* --- EMPTY CART --- */}
+        {cart.length === 0 && (
+          <div className="cart-empty">
+            <img
+              src={emptyCartImg}
+              alt="Empty Cart"
+              className="cart-empty-image"
+              onClick={() => navigate("/caps")}
+            />
+            <p className="cart-empty-text">
+              Your cart is currently empty. Start shopping now!
+            </p>
+            <div className="cart-empty-actions">
+              <button className="btn-primary" onClick={() => navigate("/caps")}>
+                Shop Caps
+              </button>
+              <button className="btn-secondary" onClick={() => navigate("/patches")}>
+                Shop Patches
+              </button>
+            </div>
+          </div>
+        )}
 
-                <div className="cart-item-actions">
-                  <div className="quantity-adjuster">
+        {/* --- CART WITH ITEMS --- */}
+        {cart.length > 0 && (
+          <div className="cart-layout">
+            <div className="cart-items-list">
+              {cart.map((item, index) => (
+                <div
+                  key={`${item.source}-${item.id}-${index}`}
+                  className="cart-item-card"
+                >
+                  <div className="cart-item-image-wrapper-with-remove">
+                    <div className="cart-item-image-link">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="cart-item-image"
+                      />
+                    </div>
                     <button
-                      onClick={() => updateQuantity(item.id, item.source, -1)}
-                      className="qty-btn"
+                      className="cart-image-remove-btn"
+                      onClick={() => removeItem(item.id, item.source)}
+                      aria-label={`Remove ${item.name}`}
                     >
-                      -
-                    </button>
-                    <span className="qty-value">{item.qty || 1}</span>
-                    <button
-                      onClick={() => updateQuantity(item.id, item.source, +1)}
-                      className="qty-btn"
-                    >
-                      +
+                      <X size={16} />
                     </button>
                   </div>
-                  <div className="cart-item-total">
-                    Item Total: ₱
-                    {(Number(item.priceMin || 0) * (item.qty || 1)).toLocaleString()}
+
+                  <div className="cart-item-details-container">
+                    <h3 className="cart-item-name">{item.name}</h3>
+                    <p className="cart-item-details">Category: {item.category}</p>
+                    <p className="cart-item-price-small">{item.priceLabel}</p>
+                  </div>
+
+                  <div className="cart-item-actions">
+                    <div className="quantity-adjuster">
+                      <button
+                        onClick={() => updateQuantity(item.id, item.source, -1)}
+                        className="qty-btn"
+                      >
+                        -
+                      </button>
+                      <span className="qty-value">{item.qty || 1}</span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.source, +1)}
+                        className="qty-btn"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="cart-item-total">
+                      Item Total: ₱
+                      {(Number(item.priceMin || 0) * (item.qty || 1)).toLocaleString()}
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+
+            <aside className="order-summary">
+              <h2>Order Summary</h2>
+              <hr />
+              <div className="summary-row">
+                <span>Subtotal ({cart.length} items):</span>
+                <span>₱ {subtotal.toLocaleString()}</span>
               </div>
-            ))}
+              <div className="summary-row">
+                <span>Shipping Estimate:</span>
+                <span className="text-green-400">FREE</span>
+              </div>
+              <hr />
+              <div className="summary-total">
+                <span>Order Total:</span>
+                <span>₱ {subtotal.toLocaleString()}</span>
+              </div>
+              <div className="checkout-btn-wrapper">
+                <button
+                  className="btn-primary checkout-btn"
+                  onClick={() => alert("Proceed to checkout (demo)")}
+                >
+                  PROCEED TO CHECKOUT
+                </button>
+              </div>
+            </aside>
           </div>
-
-          <aside className="order-summary">
-            <h2>Order Summary</h2>
-            <hr />
-            <div className="summary-row">
-              <span>Subtotal ({cart.length} items):</span>
-              <span>₱ {subtotal.toLocaleString()}</span>
-            </div>
-            <div className="summary-row">
-              <span>Shipping Estimate:</span>
-              <span className="text-green-400">FREE</span>
-            </div>
-            <hr />
-            <div className="summary-total">
-              <span>Order Total:</span>
-              <span>₱ {subtotal.toLocaleString()}</span>
-            </div>
-            <button
-              className="btn-primary"
-              onClick={() => alert("Proceed to checkout (demo)")}
-            >
-              PROCEED TO CHECKOUT
-            </button>
-          </aside>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
