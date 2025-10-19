@@ -6,9 +6,14 @@ import modelImage from "../assets/model.png";
 const ShopCollectionButton = () => {
   const navigate = useNavigate();
   return (
-    <button className="btn-primary" onClick={() => navigate("/shop")}>
-      SHOP COLLECTION
-    </button>
+    <div className="flex gap-4">
+      <button className="btn-primary" onClick={() => navigate("/caps")}>
+        Premium Caps
+      </button>
+      <button className="btn-secondary" onClick={() => navigate("/patches")}>
+        Patches
+      </button>
+    </div>
   );
 };
 
@@ -22,14 +27,10 @@ const Homepage = () => {
             <div className="hamburger-line"></div>
             <div className="hamburger-line"></div>
           </div>
+
           
-          <nav className="navigation">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/patches" className="nav-link">Patches</a>
-            <a href="/shop" className="nav-link">Cap</a>
-          </nav>
         </div>
-        
+
         {/* UPDATED: Cart icon is now a Link to the /cart route */}
         <Link to="/cart" className="cart-icon">
           🛒
@@ -39,34 +40,27 @@ const Homepage = () => {
       <div className="main-layout">
         <section className="left-content">
           <div className="brand-section">
-            <h1 className="brand-title">
-              INK & THREADS
-            </h1>
-            
-            <div className="tagline">Premium Embroidered Caps</div>
-            
+            <h1 className="brand-title">INK & THREADS</h1>
+
+            <div className="tagline">Premium Embroidered</div>
+
             <div className="cta-buttons">
               <ShopCollectionButton />
-              <button className="btn-secondary">CUSTOM DESIGN</button>
             </div>
           </div>
         </section>
 
         <section className="right-content">
           <div className="image-container">
-            <img
-              src={modelImage}
-              alt="Model"
-              className="hero-image"
-            />
+            <img src={modelImage} alt="Model" className="hero-image" />
             <div className="bracket bracket-top-right"></div>
             <div className="bracket bracket-bottom-left"></div>
           </div>
-          
+
           <div className="description-section">
             <p className="description-text">
-              "Discover premium embroidered caps designed for style, comfort, and durability. 
-              From custom designs to timeless classics, our caps let you wear your personality 
+              "Discover premium embroidered caps designed for style, comfort, and durability.
+              From custom designs to timeless classics, our caps let you wear your personality
               with every stitch."
             </p>
           </div>

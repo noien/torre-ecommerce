@@ -78,7 +78,7 @@ const Cartpage = () => {
             src={emptyCartImg}
             alt="Empty Cart"
             className="cart-empty-image"
-            onClick={() => navigate("/shop")} // Makes the image clickable to shop
+            onClick={() => navigate("/caps")} // Makes the image clickable to shop
           />
           <p className="cart-empty-text">
             Your cart is currently empty. Start shopping now!

@@ -102,7 +102,7 @@ const Shop2 = () => {
             <button onClick={() => navigate("/patches")} className="shop-nav-link">
               Patches
             </button>
-            <button onClick={() => navigate("/shop")} className="shop-nav-link">
+            <button onClick={() => navigate("/caps")} className="shop-nav-link">
               Caps
             </button>
           </div>

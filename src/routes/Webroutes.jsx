@@ -53,7 +53,7 @@ const RouteWrapper = () => {
       
       <Routes location={location}>
         <Route path="/" element={<Homepage />} />
-        <Route path="/shop" element={<Shop />} />
+        <Route path="/caps" element={<Shop />} />
         <Route path="/patches" element={<Shop2 />} />
         <Route path="/cart" element={<Cartpage />} /> 
       </Routes>
