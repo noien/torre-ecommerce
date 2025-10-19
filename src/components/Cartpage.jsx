@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Cartpage.css";
 import emptyCartImg from "../assets/cat-cart.png";
-import { X } from "lucide-react";
-import { allProducts } from "../routes/Products.jsx";
-import { allPatchProducts } from "../routes/Products2.jsx";
+import { MinusCircle } from "lucide-react"; // ✅ replaced X with MinusCircle
+import { allProducts } from "../routes/Products";
+import { allPatchProducts } from "../routes/Products2";
 
 const Cartpage = () => {
   const navigate = useNavigate();
@@ -19,9 +19,7 @@ const Cartpage = () => {
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    } catch {}
+    localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   const removeItem = (id, source) => {
@@ -32,9 +30,11 @@ const Cartpage = () => {
     setCart((prev) =>
       prev
         .map((item) => {
-          if (!(item.id === id && item.source === source)) return item;
-          const nextQty = Math.max(0, (item.qty || 1) + delta);
-          return { ...item, qty: nextQty };
+          if (item.id === id && item.source === source) {
+            const nextQty = Math.max(0, (item.qty || 1) + delta);
+            return { ...item, qty: nextQty };
+          }
+          return item;
         })
         .filter((i) => i.qty > 0)
     );
@@ -43,22 +43,6 @@ const Cartpage = () => {
   const subtotal = cart.reduce(
     (acc, item) => acc + Number(item.priceMin || 0) * (item.qty || 1),
     0
-  );
-
-  const showcasePatches = allPatchProducts.slice(0, 4);
-
-  const ShowcaseItem = ({ product }) => (
-    <div
-      className="product-card"
-      onClick={() => navigate(`/patches/${product.id}`)}
-      style={{ cursor: "pointer" }}
-    >
-      <div className="product-image-wrapper">
-        <img src={product.image} alt={product.name} className="product-image" />
-      </div>
-      <h3 className="product-name">{product.name}</h3>
-      <p className="product-price">{product.priceLabel}</p>
-    </div>
   );
 
   return (
@@ -90,10 +74,11 @@ const Cartpage = () => {
         </div>
       </nav>
 
+      {/* 🧺 Main Cart Section */}
       <div style={{ paddingTop: "7rem" }}>
         <h1 className="cart-title">Your Cart</h1>
 
-        {/* --- EMPTY CART --- */}
+        {/* 🕳️ Empty Cart State */}
         {cart.length === 0 && (
           <div className="cart-empty">
             <img
@@ -116,9 +101,10 @@ const Cartpage = () => {
           </div>
         )}
 
-        {/* --- CART WITH ITEMS --- */}
+        {/* 🧾 Cart With Items */}
         {cart.length > 0 && (
           <div className="cart-layout">
+            {/* Cart Items */}
             <div className="cart-items-list">
               {cart.map((item, index) => (
                 <div
@@ -133,12 +119,14 @@ const Cartpage = () => {
                         className="cart-item-image"
                       />
                     </div>
+
+                    {/* ✅ Changed remove button to MinusCircle icon */}
                     <button
                       className="cart-image-remove-btn"
                       onClick={() => removeItem(item.id, item.source)}
                       aria-label={`Remove ${item.name}`}
                     >
-                      <X size={16} />
+                      <MinusCircle size={20} />
                     </button>
                   </div>
 
@@ -173,6 +161,7 @@ const Cartpage = () => {
               ))}
             </div>
 
+            {/* Order Summary */}
             <aside className="order-summary">
               <h2>Order Summary</h2>
               <hr />
@@ -184,17 +173,18 @@ const Cartpage = () => {
                 <span>Shipping Estimate:</span>
                 <span className="text-green-400">FREE</span>
               </div>
-              <hr />
               <div className="summary-total">
                 <span>Order Total:</span>
                 <span>₱ {subtotal.toLocaleString()}</span>
               </div>
-              <div className="checkout-btn-wrapper">
+
+              {/* ✅ Centered Checkout Button */}
+              <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
                 <button
-                  className="btn-primary checkout-btn"
+                  className="btn-primary"
                   onClick={() => alert("Proceed to checkout (demo)")}
                 >
-                  PROCEED TO CHECKOUT
+                  Proceed to Checkout
                 </button>
               </div>
             </aside>
