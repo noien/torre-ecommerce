@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "../styles/Homepage.css";
 import emailjs from "emailjs-com"; 
 import modelImage from "../assets/model.png";
+import { useNavigate } from "react-router-dom";
 
 
 const Homepage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleEmailSubmit = (e) => {
@@ -35,10 +37,14 @@ const Homepage = () => {
         <h1 className="homepage-title">INK & THREADS</h1>
         <p className="homepage-subtitle">Premium Embroidered</p>
 
-        <div className="homepage-buttons">
-          <button className="btn">PREMIUM CAPS</button>
-          <button className="btn">PATCHES</button>
-        </div>
+       <div className="homepage-buttons">
+      <button className="btn" onClick={() => navigate("/cap")}>
+        PREMIUM CAPS
+      </button>
+      <button className="btn" onClick={() => navigate("/patches")}>
+        PATCHES
+      </button>
+    </div>
 
         <p className="homepage-description">
           "Discover premium embroidered caps designed for style, comfort, and durability.
