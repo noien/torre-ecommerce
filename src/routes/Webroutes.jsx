@@ -4,6 +4,7 @@ import Homepage from "../components/Homepage";
 import Shop from "../components/Shop";
 import Shop2 from "../components/Shop2";
 import Cartpage from "../components/Cartpage"; 
+import CheckoutPage from "../components/CheckoutPage";
 
 const RouteLoadingSpinner = ({ loading }) => {
   
@@ -56,6 +57,7 @@ const RouteWrapper = () => {
         <Route path="/caps" element={<Shop />} />
         <Route path="/patches" element={<Shop2 />} />
         <Route path="/cart" element={<Cartpage />} /> 
+        <Route path="/checkout" element={<CheckoutPage />} />
       </Routes>
     </>
   );

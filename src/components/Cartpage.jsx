@@ -182,7 +182,7 @@ const Cartpage = () => {
               <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
                 <button
                   className="btn-primary"
-                  onClick={() => alert("Proceed to checkout (demo)")}
+                  onClick={() => navigate("/checkout")}
                 >
                   Proceed to Checkout
                 </button>
