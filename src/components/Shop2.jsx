@@ -12,7 +12,8 @@ const Shop2 = () => {
   const [priceExpanded, setPriceExpanded] = useState(false);
   const [priceSort, setPriceSort] = useState(null);
   const [minRating, setMinRating] = useState(0);
-  const [ratingOpen, setRatingOpen] = useState(false); 
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // ✅ new state
 
   const togglePriceSort = () => {
     setPriceSort((prev) => (prev === "desc" ? "asc" : "desc"));
@@ -35,10 +36,7 @@ const Shop2 = () => {
 
   const renderStars = (rating) =>
     [...Array(5)].map((_, i) => (
-      <span
-        key={i}
-        className={`text-sm ${i < rating ? "text-yellow-400" : "text-gray-600"}`}
-      >
+      <span key={i} className={`text-sm ${i < rating ? "text-yellow-400" : "text-gray-600"}`}>
         ★
       </span>
     ));
@@ -90,7 +88,8 @@ const Shop2 = () => {
       <nav className="shop-navbar">
         <div className="shop-nav-content">
           <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-            <div className="hamburger-menu" aria-hidden="true">
+            {/* ✅ Hamburger Toggle */}
+            <div className="hamburger-menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
               <div className="hamburger-line" />
               <div className="hamburger-line" />
               <div className="hamburger-line" />
@@ -115,8 +114,8 @@ const Shop2 = () => {
 
       {/* Layout */}
       <div className="shop-main-layout">
-        {/* Sidebar */}
-        <aside className="shop-sidebar" aria-label="Filters sidebar">
+        {/* Sidebar Filters */}
+        <aside className={`shop-sidebar ${sidebarOpen ? "open" : ""}`} aria-label="Filters sidebar">
           <div className="sidebar-content">
             {/* 🔍 Search */}
             <div className="search-container">
@@ -160,7 +159,7 @@ const Shop2 = () => {
                   )}
                 </div>
 
-                {/*Ratings Dropdown (Tailwind) */}
+                {/* ⭐ Ratings */}
                 <div className="filter-section relative">
                   <div
                     className="filter-header border-top flex justify-between items-center cursor-pointer"
@@ -185,6 +184,7 @@ const Shop2 = () => {
                             onClick={() => {
                               setMinRating(num);
                               setRatingOpen(false);
+                              setSidebarOpen(false); // ✅ closes sidebar on selection
                             }}
                           >
                             {num === 0 ? (
@@ -219,6 +219,9 @@ const Shop2 = () => {
           </div>
         </aside>
 
+        {/* ✅ Overlay when sidebar open */}
+        {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+
         {/* Product Grid */}
         <main className="products-scroll-area">
           <div className="products-container">
@@ -236,10 +239,7 @@ const Shop2 = () => {
                   </div>
                   <h3 className="product-name">{product.name}</h3>
                   <p className="product-price">{product.priceLabel}</p>
-                  <button
-                    className="product-button mt-3"
-                    onClick={() => addToCart(product)}
-                  >
+                  <button className="product-button mt-3" onClick={() => addToCart(product)}>
                     Add to Cart
                   </button>
                 </div>

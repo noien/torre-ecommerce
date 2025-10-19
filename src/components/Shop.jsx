@@ -12,7 +12,8 @@ const Shop = () => {
   const [priceExpanded, setPriceExpanded] = useState(false);
   const [priceSort, setPriceSort] = useState(null);
   const [minRating, setMinRating] = useState(0);
-  const [ratingOpen, setRatingOpen] = useState(false); 
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
 
   const togglePriceSort = () => {
     setPriceSort((prev) => (prev === "desc" ? "asc" : "desc"));
@@ -90,11 +91,13 @@ const Shop = () => {
       <nav className="shop-navbar">
         <div className="shop-nav-content">
           <div className="flex items-center gap-6">
-            <div className="hamburger-menu">
+            {/* Hamburger menu toggles sidebar */}
+            <div className="hamburger-menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
               <div className="hamburger-line" />
               <div className="hamburger-line" />
               <div className="hamburger-line" />
             </div>
+
             <button onClick={() => navigate("/")} className="shop-nav-link">Home</button>
             <button onClick={() => navigate("/patches")} className="shop-nav-link">Patches</button>
             <button onClick={() => navigate("/caps")} className="shop-nav-link">Caps</button>
@@ -104,8 +107,8 @@ const Shop = () => {
       </nav>
 
       <div className="shop-main-layout">
-        {/* Sidebar Filters */}
-        <aside className="shop-sidebar">
+        {/* Sidebar with toggle class */}
+        <aside className={`shop-sidebar ${sidebarOpen ? "open" : ""}`}>
           <div className="sidebar-content space-y-4">
             {/* Search */}
             <div className="search-container">
@@ -123,7 +126,7 @@ const Shop = () => {
               <h3 className="filters-title">Filters</h3>
 
               <div className="filter-sections">
-                {/* ⭐ Rating Dropdown Filter */}
+                {/* Rating Dropdown Filter */}
                 <div className="filter-section relative">
                   <div
                     className="filter-header border-top flex justify-between items-center cursor-pointer"
@@ -148,6 +151,7 @@ const Shop = () => {
                             onClick={() => {
                               setMinRating(num);
                               setRatingOpen(false);
+                              setSidebarOpen(false); 
                             }}
                           >
                             {num === 0 ? (
@@ -205,30 +209,25 @@ const Shop = () => {
           </div>
         </aside>
 
+        {/* Overlay for mobile */}
+        {sidebarOpen && (
+          <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+        )}
+
         {/* Main Products Section */}
         <main className="products-scroll-area">
           <div className="products-container">
             <h2 className="products-title">PRODUCTS</h2>
             <div className="products-grid">
               {visibleProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="product-card transition-transform hover:-translate-y-1 hover:shadow-lg"
-                >
+                <div key={product.id} className="product-card">
                   <div className="flex justify-center mb-2">{renderStars(product.rating)}</div>
                   <div className="product-image-wrapper">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="product-image"
-                    />
+                    <img src={product.image} alt={product.name} className="product-image" />
                   </div>
                   <h3 className="product-name">{product.name}</h3>
                   <p className="product-price">{product.priceLabel}</p>
-                  <button
-                    className="product-button mt-3"
-                    onClick={() => addToCart(product)}
-                  >
+                  <button className="product-button" onClick={() => addToCart(product)}>
                     Add to Cart
                   </button>
                 </div>
