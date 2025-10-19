@@ -23,6 +23,7 @@ const CheckoutPage = () => {
   const handlePlaceOrder = (e) => {
     e.preventDefault();
     localStorage.removeItem("cart");
+    localStorage.setItem("showSplashAfterCheckout", "true");
     navigate("/");
   };
 
