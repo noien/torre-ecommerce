@@ -177,7 +177,7 @@ const Cartpage = () => {
                 <span>₱ {subtotal.toLocaleString()}</span>
               </div>
 
-              {/* ✅ Centered Checkout Button */}
+              {/* Centered Checkout Button */}
               <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
                 <button
                   className="btn-primary"
